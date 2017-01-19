@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Beautiful Timetables</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+<div role="tabpanel">
+
+
+<div id="header">
+	<img id="logo" src="https://upload.wikimedia.org/wikipedia/en/c/ca/University_of_Edinburgh_School_of_Informatics_logo.jpg">
+	<h2>Lecture Timetable 2016-2017</h2>
+
+    <table id="header-table" class="table table-hover">
+    <thead>
+    <tr>
+        <th></th>
+        {% for time in TIMES_LIST %}
+        <th>{{ time }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    </table>
+</div>
+
+
+
+
+
+<div class="container">
+  
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane fade in active" id="basics">
+  {{COURSE_DICT}}
+  </div>
+  
+
+<table class="table">
+    <tbody>
+
+      {% for day in WEEKDAYS %}
+        <tr>
+          <td>{{day}}</td>
+
+
+          {% for hourSlot in CONTENT_DICT[day[0:3]] %}
+              <div>
+              <td>
+              {% for courseAcr in hourSlot %}
+              <div class="well well-sm pointer" data-toggle="modal" data-target="#{{courseAcr}}">
+                      <p><b>{{courseAcr}}</b></p>
+                  {% if courseAcr in COURSE_DICT %}
+                      <p>{{ (COURSE_DICT[courseAcr])['course']  }}</p>
+                  {% endif %}
+              </div>
+                    
+
+                  <!-- Modal -->
+		<div class="modal fade" id="{{courseAcr}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel">{% if courseAcr in COURSE_DICT %}
+                      <p>{{ (COURSE_DICT[courseAcr])['course']  }}</p>
+                  {% endif %}</h4>
+		      </div>
+		      <div class="modal-body">
+			<a target="_blank" href="
+                        {% if courseAcr in COURSE_DICT %}
+                            {{(COURSE_DICT[courseAcr])['course_url']}}
+                        {% endif %}
+                        "><span class="glyphicon glyphicon-home"></span></a>
+		      </div>
+		      <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			<button type="button" class="btn btn-primary">Save changes</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+
+
+
+              {% endfor %}
+              </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}	
+
+
+
+</div>
+</body>
+</html>

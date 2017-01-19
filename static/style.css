@@ -1,0 +1,56 @@
+#header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+    float: left;
+    z-index: 2;
+    background-color: white;
+}
+#logo{
+    width: 350px;
+    height: auto;
+}
+#header-table{
+    margin:0;
+}
+
+.collapse {
+
+}
+
+
+.collapse>#logo{
+    width: 250px;
+    -webkit-transition: width 1s
+}
+
+.table{
+    table-layout: fixed;
+}
+
+#header, h2{
+    display: inline;
+}
+
+.container{
+    width: 100%;
+    top: 131px;
+    position: relative;
+    padding: 0;
+}
+
+
+.courseacr{
+    color:darkslateblue;
+}
+
+.coursename{
+    font-weight:normal;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+
