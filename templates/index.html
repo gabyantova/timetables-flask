@@ -11,6 +11,55 @@
 	<script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
+
+<!--
+
+COURSE_DICT:
+
+{
+u'STN': {
+             'course': u'Social and Technological Networks',
+             'credits': u'10',
+             'course_url': 'http://course.inf.ed.ac.uk/stn',
+             'year': u'4'
+        }
+}
+
+CONTENT_DICT:
+
+{
+u'Fri': [
+            [
+                {
+                    'course_acr': u'DS',
+                    'course_details': u' Teviot LT, MEDS',
+                    'course_year': u'4'
+                },
+                {
+                    'course_acr': u'CT',
+                    'course_details': u' Meadows LT, MEDS',
+                    'course_year': u'3'
+                }
+             ],
+
+             [
+                {
+                    'course_acr': u'MLPR',
+                    'course_details': u' LHB, DHT',
+                    'course_year': u'4'
+                }
+             ],
+
+             [
+             ]
+         ]
+}
+
+
+
+
+//-->
+
 <div role="tabpanel">
 
 
@@ -38,7 +87,7 @@
   
 <div class="tab-content">
   <div role="tabpanel" class="tab-pane fade in active" id="basics">
-  {{COURSE_DICT}}
+  {{CONTENT_DICT}}
   </div>
   
 
@@ -53,23 +102,28 @@
           {% for hourSlot in CONTENT_DICT[day[0:3]] %}
               <div>
               <td>
-              {% for courseAcr in hourSlot %}
-              <div class="well well-sm pointer" data-toggle="modal" data-target="#{{courseAcr}}">
-                      <p><b>{{courseAcr}}</b></p>
-                  {% if courseAcr in COURSE_DICT %}
-                      <p>{{ (COURSE_DICT[courseAcr])['course']  }}</p>
+              {% for courseDict in hourSlot %}
+              <div class="well well-sm pointer" data-toggle="modal" data-target="#{{  courseDict['course_acr']  }}">
+                      <p><b>{{  courseDict["course_acr"]  }}</b></p>
+                  {% if courseDict["course_acr"] in COURSE_DICT %}
+                      <p>{{ (COURSE_DICT[courseDict["course_acr"]])['course']  }}</p>
+                      <p>Year: {{ courseDict["course_year"] }}</p>
+                      <p>{{ courseDict["course_details"]  }}</p>
+
                   {% endif %}
               </div>
                     
 
                   <!-- Modal -->
-		<div class="modal fade" id="{{courseAcr}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal fade" id="{{ courseDict['course_acr']   }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="myModalLabel">{% if courseAcr in COURSE_DICT %}
-                      <p>{{ (COURSE_DICT[courseAcr])['course']  }}</p>
+			<h4 class="modal-title" id="myModalLabel">{% if courseDict["course_acr"] in COURSE_DICT %}
+                      <p>{{ (COURSE_DICT[courseDict["course_acr"]])['course']  }}</p>
+                      <p>CREDITS: {{   COURSE_DICT[courseDict["course_acr"]]['credits']   }}</p>
+                      <p>YEAR: {{   COURSE_DICT[courseDict["course_acr"]]['year']   }}</p>
                   {% endif %}</h4>
 		      </div>
 		      <div class="modal-body">
