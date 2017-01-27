@@ -8,9 +8,55 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-	<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+
+
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.css' rel='stylesheet' />
+
+
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <style>
+    body { margin:0; padding:0; }
+    .map { position:relative; width:400px; height:300px; }
+    </style>
+<script>
+
+
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZ2FieWFudG92YSIsImEiOiJjaXlhNXRsOW8wMDIyMzNxcDdxdTk3dGcwIn0.gNNtUvGPe9zNblVthu__Yg';
+
+        $(document).ready(function(){
+
+
+            $('.modal').on('shown.bs.modal', function() {
+
+              map.invalidateSize();
+              //map.resize();
+            });
+
+
+
+
+            $('.test').html("DOES THIS FUCKING WORK GODDDAMN IT???!??!?!")
+
+        });
+
+        $(window).on("scroll touchmove", function () {
+         $('#header').toggleClass('collapse', $(document).scrollTop() > 0);
+        });
+
+
+</script>
+
+
 </head>
 <body>
+
+
+
+
 
 <!--
 
@@ -84,12 +130,15 @@ u'Fri': [
 
 
 <div class="container">
-  
+
 <div class="tab-content">
   <div role="tabpanel" class="tab-pane fade in active" id="basics">
-  {{CONTENT_DICT}}
+  {{VENUE_DICT}}
+
+      <!--<div id='map-one' class='map'> </div>-->
+      <!--<div id='map-one' class='map'> </div>-->
   </div>
-  
+
 
 <table class="table">
     <tbody>
@@ -106,32 +155,75 @@ u'Fri': [
               <div class="well well-sm pointer" data-toggle="modal" data-target="#{{  courseDict['course_acr']  }}">
                       <p><b>{{  courseDict["course_acr"]  }}</b></p>
                   {% if courseDict["course_acr"] in COURSE_DICT %}
-                      <p>{{ (COURSE_DICT[courseDict["course_acr"]])['course']  }}</p>
+                      <p>{{ (COURSE_DICT[courseDict["course_acr"]])['course'] }}</p>
                       <p>Year: {{ courseDict["course_year"] }}</p>
-                      <p>{{ courseDict["course_details"]  }}</p>
+                      <p>{{ matchVenue(courseDict["course_details"])  }}</p>
 
                   {% endif %}
               </div>
-                    
+
 
                   <!-- Modal -->
+
+
+
+
 		<div class="modal fade" id="{{ courseDict['course_acr']   }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+
+        <script>
+        $('#{{ courseDict['course_acr'] }}').on('shown.bs.modal', function() {
+        //$(document).ready(function(){
+
+            $.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/4%20dalkeith%20road%20edinburgh%20uk.json?access_token=pk.eyJ1IjoiZ2FieWFudG92YSIsImEiOiJjaXlhNXRsOW8wMDIyMzNxcDdxdTk3dGcwIn0.gNNtUvGPe9zNblVthu__Yg", function(json) {
+               // alert("JSON Data: " + JSON.stringify(json.features.center[0]));
+                //$('.test').html("JSON Data: " + JSON.stringify(json.features.center[0]))
+                var map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v9',
+                    zoom: 15,
+                    center: [JSON.stringify(json.features[0].center[0]), JSON.stringify(json.features[0].center[1])]
+                });
+
+            });
+
+       });
+
+        </script>
+
+
+
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h4 class="modal-title" id="myModalLabel">{% if courseDict["course_acr"] in COURSE_DICT %}
+
+                      <p class="test"></p>
                       <p>{{ (COURSE_DICT[courseDict["course_acr"]])['course']  }}</p>
                       <p>CREDITS: {{   COURSE_DICT[courseDict["course_acr"]]['credits']   }}</p>
                       <p>YEAR: {{   COURSE_DICT[courseDict["course_acr"]]['year']   }}</p>
+                      <p>ADDRESS:
+      <div id="map" class='map'> </div>
                   {% endif %}</h4>
+
+
+
 		      </div>
+
+
+
+
 		      <div class="modal-body">
+
+
+
+
 			<a target="_blank" href="
                         {% if courseAcr in COURSE_DICT %}
                             {{(COURSE_DICT[courseAcr])['course_url']}}
                         {% endif %}
                         "><span class="glyphicon glyphicon-home"></span></a>
+
 		      </div>
 		      <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -148,7 +240,7 @@ u'Fri': [
               </td>
           {% endfor %}
         </tr>
-      {% endfor %}	
+      {% endfor %}
 
 
 

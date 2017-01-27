@@ -11,6 +11,11 @@ def Content():
 
     return TOPIC_DICT
 
+
+def myFunc():
+    return("HELLO BITCHES!!!!")
+
+
 def Weekdays():
     return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
@@ -43,42 +48,23 @@ def Get_course_dict():
 
 
 
+def Get_venue_dict():
+    VENUE_DICT = {}
+    url_venue = "http://web.inf.ed.ac.uk/infweb/student-services/ito/admin/venue-codes"
+    soup_venue = BeautifulSoup(urllib.urlopen(url_venue).read())
+    #course_table = soup_venue.table.tbody.find_all("tr")
+
+    building_and_room_codes = soup_venue.find("section", {"id":"block-system-main"}).find_all("ul")
+
+    building_codes = building_and_room_codes[0].find_all("li")
+    #room_codes = building_and_room_codes[1].find_all("li")
 
 
-"""def Get_content_dict():
-    content_dict = {}
+    for building_code in building_codes:
+        VENUE_DICT[building_code.find("strong").get_text().replace(" ", "")] = {"venue_name": building_code.find("a").get_text(),
+                                                               "venue_url": building_code.find("a").get("href")}
 
-    soup = BeautifulSoup(urllib.urlopen(Get_url()).read())
-    contents = soup.table.tbody.find_all("tr")
-
-    for content in contents:
-        row_items = content.find_all("td")
-        first = True
-        day_of_the_week = ""
-        counter = 0
-        for row_item in row_items:
-            if first:
-                content_dict[row_item.text] = []
-                day_of_the_week = row_item.text
-                first = False
-            else: 
-                courses_that_hour = row_item.find_all("p")
-                
-                acronymns_of_courses_that_hour = []
-                array_course_that_hour = []
-
-                for course_that_hour in courses_that_hour:
-                    if course_that_hour:
-                        print array_course_that_hour
-                        print course_that_hour.text
-                        print course_that_hour.text.split(" ", 2)
-                        array_course_that_hour = course_that_hour.text.split(" ", 2)
-                        #course_acr = (course_that_hour.text).strip() #remove whitespaces
-                        acronymns_of_courses_that_hour.append(array_course_that_hour)
-                content_dict[day_of_the_week].append(acronymns_of_courses_that_hour)
-
-    return content_dict"""
-
+    return VENUE_DICT
 
 
 
