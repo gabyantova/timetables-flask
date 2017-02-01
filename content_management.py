@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import urllib
 import datetime
 import re
+import ast
 
 def Content():
     TOPIC_DICT = {"Basics":[["Introduction to Python","/introduction-to-python-programming/"],
@@ -68,6 +69,16 @@ def Get_venue_dict():
 
 
 
+def Get_UOE_venue_data():
+    soup = BeautifulSoup(urllib.urlopen("http://webproxy.is.ed.ac.uk/web-proxy/maps_edweb/data.php"))
+    content = soup.body.text
+    var_list = content.split(";")
+    #var_list[0] = var_list[0].split("=")[1]
+    var_list[1] = var_list[1].split("=")[1].strip()
+    #mapAreas = ast.literal_eval(var_list[0])
+    pointsOfInterest = ast.literal_eval(var_list[1])
+
+    return pointsOfInterest
 
 
 def Get_content_dict():
@@ -114,6 +125,6 @@ def Get_content_dict():
 
                         final_array_courses_that_hour.append(dict_course_that_hour)
                 content_dict[day_of_the_week].append(final_array_courses_that_hour)
-    print content_dict
+    #print content_dict
 
     return content_dict
