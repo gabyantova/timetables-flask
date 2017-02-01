@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Beautiful Timetables</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
+    <title>Beautiful Timetables</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.css' rel='stylesheet' />
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.css' rel='stylesheet'/>
 
 
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-
-<script>
+    <script>
 
 
         mapboxgl.accessToken = 'pk.eyJ1IjoiZ2FieWFudG92YSIsImEiOiJjaXlhNXRsOW8wMDIyMzNxcDdxdTk3dGcwIn0.gNNtUvGPe9zNblVthu__Yg';
@@ -40,14 +38,15 @@
         });
 
 
-</script>
+
+
+
+
+    </script>
 
 
 </head>
 <body>
-
-
-
 
 
 <!--
@@ -101,65 +100,72 @@ u'Fri': [
 <div role="tabpanel">
 
 
-<div id="header">
-	<img id="logo" src="https://upload.wikimedia.org/wikipedia/en/c/ca/University_of_Edinburgh_School_of_Informatics_logo.jpg">
-	<h2>Lecture Timetable 2016-2017</h2>
+    <div id="header">
+        <img id="logo"
+             src="https://upload.wikimedia.org/wikipedia/en/c/ca/University_of_Edinburgh_School_of_Informatics_logo.jpg">
+        <h2>Lecture Timetable 2016-2017</h2>
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#1" data-toggle="tab">Semester 1</a>
+            </li>
+            <li><a href="#2" data-toggle="tab">Semester 2</a>
+            </li>
+        </ul>
 
-    <table id="header-table" class="table table-hover">
-    <thead>
-    <tr>
-        <th></th>
-        {% for time in TIMES_LIST %}
-        <th>{{ time }}</th>
-        {% endfor %}
-    </tr>
-    </thead>
-    </table>
-</div>
-
-
-
-
-
-<div class="container">
-
-<div class="tab-content">
-  <div role="tabpanel" class="tab-pane fade in active" id="basics">
-   {{UOE_VENUE_DATA}}
-
-      <!--<div id='map-one' class='map'> </div>-->
-      <!--<div id='map-one' class='map'> </div>-->
-  </div>
+        <table id="header-table" class="table table-hover">
+            <thead>
+            <tr>
+                <th></th>
+                {% for time in TIMES_LIST %}
+                <th>{{ time }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+        </table>
+    </div>
 
 
-<table class="table">
-    <tbody>
+    <div class="container">
 
-      {% for day in WEEKDAYS %}
-        <tr>
-          <td>{{day}}</td>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="basics">
+                {{UOE_VENUE_DATA}}
 
+                <!--<div id='map-one' class='map'> </div>-->
+                <!--<div id='map-one' class='map'> </div>-->
+            </div>
 
-          {% for hourSlot in CONTENT_DICT[day[0:3]] %}
-              <div>
-              <td>
-              {% for courseDict in hourSlot %}
-              <div class="well well-sm pointer" data-toggle="modal" data-target="#{{  courseDict['course_acr'] + '-' + day  }}-modal">
-                      <p class = "course_acr"><b>{{  courseDict["course_acr"]  }}</b></p>
-                  {% if courseDict["course_acr"] in COURSE_DICT %}
-                      <p>{{ (COURSE_DICT[courseDict["course_acr"]])['course'] }}</p>
-                      <!--<p>Year: {{ courseDict["course_year"] }}</p>-->
-                      <p>{{ matchVenue(courseDict["course_details"])  }}</p>
+            <div class="tab-pane active" id="1">
+                <table class="table">
+                    <tbody>
 
-                  {% endif %}
-              </div>
+                    {% for day in WEEKDAYS %}
+                    <tr>
+                        <td>{{day}}</td>
 
 
-        <!-- Modal -->
+                        {% for hourSlot in CONTENT_DICT[day[0:3]] %}
+                        <div>
+                            <td>
+                                {% for courseDict in hourSlot %}
+                                <div class="well well-sm pointer" data-toggle="modal"
+                                     data-target="#{{  courseDict['course_acr'] + '-' + day  }}-modal">
+                                    <p class="course_acr"><b>{{ courseDict["course_acr"] }}</b></p>
+                                    {% if courseDict["course_acr"] in COURSE_DICT %}
+                                    <p>{{ (COURSE_DICT[courseDict["course_acr"]])['course'] }}</p>
+                                    <!--<p>Year: {{ courseDict["course_year"] }}</p>-->
+                                    <p>{{ matchVenue(courseDict["course_details"]) }}</p>
 
-		<div class="modal fade" id="{{  courseDict['course_acr'] + '-' + day  }}-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                    {% endif %}
+                                </div>
 
-        <script>
+
+                                <!-- Modal -->
+
+                                <div class="modal fade" id="{{  courseDict['course_acr'] + '-' + day  }}-modal"
+                                     tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+
+                                    <script>
         $('#{{  courseDict["course_acr"] + "-" + day  }}-modal').on('shown.bs.modal', function() {
         //$(document).ready(function(){
 
@@ -183,59 +189,93 @@ u'Fri': [
 
        //});
 
-        </script>
-
-		  <div class="modal-dialog" role="document">
-		    <div class="modal-content">
-		        <div class="modal-header">
-			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			        <h4 class="modal-title" id="myModalLabel">
-                        {% if courseDict["course_acr"] in COURSE_DICT %}
-                          <h2>{{ (COURSE_DICT[courseDict["course_acr"]])['course']  }}</h2>
 
 
-                        {% endif %}
-                </div>
 
 
-                <div class="modal-body">
-                    {% if courseDict["course_acr"] in COURSE_DICT %}
-                          <div class="course-details">
-                              <p>{{day}} </p>
-                              <p>CREDITS: {{   COURSE_DICT[courseDict["course_acr"]]['credits']   }}</p>
-                              <p>YEAR: {{   COURSE_DICT[courseDict["course_acr"]]['year']   }}</p>
-                              <p>VENUE: {{  mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"]))  }}</p>
-                              <p>ADDRESS: {{  matchNameInJsonToDict(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"])))['address1']  }},
-                                          {{  matchNameInJsonToDict(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"])))['postcode']  }}
-                              </p>
+                                    </script>
 
-                          </div>
-                          <div id="{{  courseDict['course_acr'] + '-' + day  }}-map" class='map'></div>
-                    {% endif %}
-			    <a target="_blank" href="
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close"><span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title" id="myModalLabel">
+                                                    {% if courseDict["course_acr"] in COURSE_DICT %}
+                                                    <h2>{{ (COURSE_DICT[courseDict["course_acr"]])['course'] }}</h2>
+
+
+                                                    {% endif %}
+                                            </div>
+
+
+                                            <div class="modal-body">
+                                                {% if courseDict["course_acr"] in COURSE_DICT %}
+                                                <div class="course-details">
+                                                    <p>{{day}} </p>
+                                                    <p>CREDITS: {{ COURSE_DICT[courseDict["course_acr"]]['credits']
+                                                        }}</p>
+                                                    <p>YEAR: {{ COURSE_DICT[courseDict["course_acr"]]['year'] }}</p>
+                                                    <p>VENUE: {{ mostSimilar(UOE_VENUE_DATA,
+                                                        matchVenue(courseDict["course_details"])) }}</p>
+                                                    <p>ADDRESS: {{ matchNameInJsonToDict(UOE_VENUE_DATA,
+                                                        mostSimilar(UOE_VENUE_DATA,
+                                                        matchVenue(courseDict["course_details"])))['address1'] }},
+                                                        {{ matchNameInJsonToDict(UOE_VENUE_DATA,
+                                                        mostSimilar(UOE_VENUE_DATA,
+                                                        matchVenue(courseDict["course_details"])))['postcode'] }}
+                                                    </p>
+
+                                                </div>
+                                                <div id="{{  courseDict['course_acr'] + '-' + day  }}-map"
+                                                     class='map'></div>
+                                                {% endif %}
+                                                <a target="_blank" href="
                         {% if courseAcr in COURSE_DICT %}
                             {{(COURSE_DICT[courseAcr])['course_url']}}
                         {% endif %}
                         "><span class="glyphicon glyphicon-home"></span></a>
 
-		        </div>
-		        <div class="modal-footer">
-			        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
-		        </div>
-		    </div>
-		  </div>
-		</div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
 
+                                {% endfor %}
+                            </td>
+                            {% endfor %}
+                    </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-pane" id="2">
+                <h3>SEMESTER 2</h3>
+                <h3>SEMESTER 2</h3>
+                <h3>SEMESTER 2</h3>
+                <h3>SEMESTER 2</h3>
+                <h3>SEMESTER 2</h3>
+                <h3>SEMESTER 2</h3>
+                <h3>SEMESTER 2</h3>
+                <h3>SEMESTER 2</h3>
+                <h3>SEMESTER 2</h3>
+        </div>
+        </div>
+
+    </div>
 
 
-              {% endfor %}
-              </td>
-          {% endfor %}
-        </tr>
-      {% endfor %}
-
+</div>
 
 
 </div>
