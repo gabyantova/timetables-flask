@@ -1,3 +1,5 @@
+body { margin:0; padding:0; }
+
 #header {
 	position: fixed;
 	top: 0;
@@ -53,4 +55,12 @@
     cursor: pointer;
 }
 
+.map { position:relative;
+    width:550px;
+    height:300px;
+    }
 
+.course_acr{
+    font-size: 15px;
+    color: darkslateblue;
+}

@@ -18,10 +18,6 @@
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 
-    <style>
-    body { margin:0; padding:0; }
-    .map { position:relative; width:400px; height:300px; }
-    </style>
 <script>
 
 
@@ -149,10 +145,10 @@ u'Fri': [
               <td>
               {% for courseDict in hourSlot %}
               <div class="well well-sm pointer" data-toggle="modal" data-target="#{{  courseDict['course_acr'] + '-' + day  }}-modal">
-                      <p><b>{{  courseDict["course_acr"]  }}</b></p>
+                      <p class = "course_acr"><b>{{  courseDict["course_acr"]  }}</b></p>
                   {% if courseDict["course_acr"] in COURSE_DICT %}
                       <p>{{ (COURSE_DICT[courseDict["course_acr"]])['course'] }}</p>
-                      <p>Year: {{ courseDict["course_year"] }}</p>
+                      <!--<p>Year: {{ courseDict["course_year"] }}</p>-->
                       <p>{{ matchVenue(courseDict["course_details"])  }}</p>
 
                   {% endif %}
@@ -175,8 +171,8 @@ u'Fri': [
                     style: 'mapbox://styles/mapbox/streets-v9',
                     zoom: 16,
                     center: [
-                            {{  marchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"])))[0] }},
-                            {{  marchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"])))[1] }}
+                            {{  matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"])))[0] }},
+                            {{  matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"])))[1] }}
                             ]
 
                             //[JSON.stringify(json.features[0].center[0]), JSON.stringify(json.features[0].center[1])]
@@ -193,21 +189,29 @@ u'Fri': [
 		    <div class="modal-content">
 		        <div class="modal-header">
 			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			        <h4 class="modal-title" id="myModalLabel">{% if courseDict["course_acr"] in COURSE_DICT %}
+			        <h4 class="modal-title" id="myModalLabel">
+                        {% if courseDict["course_acr"] in COURSE_DICT %}
+                          <h2>{{ (COURSE_DICT[courseDict["course_acr"]])['course']  }}</h2>
 
-                      <p class="test"></p>
-                        <p></p>
-                      <p>{{ (COURSE_DICT[courseDict["course_acr"]])['course']  }}</p>
-                      <p>CREDITS: {{   COURSE_DICT[courseDict["course_acr"]]['credits']   }}</p>
-                      <p>YEAR: {{   COURSE_DICT[courseDict["course_acr"]]['year']   }}</p>
-                      <p>ADDRESS: {{  mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"]))  }} </p>
-                      <div id="{{  courseDict['course_acr'] + '-' + day  }}-map" class='map'> </div>
-                  {% endif %}</h4>
+
+                        {% endif %}
                 </div>
 
 
                 <div class="modal-body">
+                    {% if courseDict["course_acr"] in COURSE_DICT %}
+                          <div class="course-details">
+                              <p>{{day}} </p>
+                              <p>CREDITS: {{   COURSE_DICT[courseDict["course_acr"]]['credits']   }}</p>
+                              <p>YEAR: {{   COURSE_DICT[courseDict["course_acr"]]['year']   }}</p>
+                              <p>VENUE: {{  mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"]))  }}</p>
+                              <p>ADDRESS: {{  matchNameInJsonToDict(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"])))['address1']  }},
+                                          {{  matchNameInJsonToDict(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"])))['postcode']  }}
+                              </p>
 
+                          </div>
+                          <div id="{{  courseDict['course_acr'] + '-' + day  }}-map" class='map'></div>
+                    {% endif %}
 			    <a target="_blank" href="
                         {% if courseAcr in COURSE_DICT %}
                             {{(COURSE_DICT[courseAcr])['course_url']}}

@@ -84,7 +84,7 @@ def utility_processor():
 
         return mostSimilarString
 
-    def marchNameInJsonToLongLat(dict, name):
+    def matchNameInJsonToLongLat(dict, name):
 
         itemInDict = {}
 
@@ -95,9 +95,14 @@ def utility_processor():
         if itemInDict.has_key('longitude') and itemInDict.has_key('latitude'):
             return [float(itemInDict['longitude']), float(itemInDict['latitude'])]
 
+    def matchNameInJsonToDict(dict, name):
+        itemInDict = {}
 
+        for item in dict:
+            if item.has_key('name') and item['name'] == name:
+                itemInDict = item
 
-
+        return itemInDict
 
     # def Get_venue_address(venue_acr, venue_dict=VENUE_DICT):
     #     venue_url = venue_dict[venue_acr]["venue_url"]
@@ -119,7 +124,8 @@ def utility_processor():
                 addressToUrl=addressToUrl,
                 similar=similar,
                 mostSimilar=mostSimilar,
-                marchNameInJsonToLongLat=marchNameInJsonToLongLat)#, Get_venue_address=Get_venue_address)
+                matchNameInJsonToLongLat=matchNameInJsonToLongLat,
+                matchNameInJsonToDict=matchNameInJsonToDict)#, Get_venue_address=Get_venue_address)
 
 
 
