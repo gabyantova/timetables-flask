@@ -15,6 +15,13 @@
 
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery.sticky-kit.min.js') }}"></script>
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v3.0.3/mapbox-gl-directions.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v3.0.3/mapbox-gl-directions.css' type='text/css' />
+
+
+    
 
     <script>
 
@@ -22,6 +29,10 @@
         mapboxgl.accessToken = 'pk.eyJ1IjoiZ2FieWFudG92YSIsImEiOiJjaXlhNXRsOW8wMDIyMzNxcDdxdTk3dGcwIn0.gNNtUvGPe9zNblVthu__Yg';
 
         $(document).ready(function(){
+
+            $(".dayOfTheWeek").stick_in_parent({
+                offset_top: 155
+            });
 
 
             $('.modal').on('shown.bs.modal', function() {
@@ -129,7 +140,7 @@ u'Fri': [
 
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane fade in active" id="basics">
-                {{UOE_VENUE_DATA}}
+
 
                 <!--<div id='map-one' class='map'> </div>-->
                 <!--<div id='map-one' class='map'> </div>-->
@@ -141,7 +152,8 @@ u'Fri': [
 
                     {% for day in WEEKDAYS %}
                     <tr>
-                        <td>{{day}}</td>
+
+                        <td> <p class = "dayOfTheWeek">{{day}}</p></td>
 
 
                         {% for hourSlot in CONTENT_DICT[day[0:3]] %}
@@ -183,6 +195,15 @@ u'Fri': [
 
                             //[JSON.stringify(json.features[0].center[0]), JSON.stringify(json.features[0].center[1])]
                 });
+
+
+
+                {{courseDict["course_acr"] + day}}Map.addControl(new MapboxDirections({
+                    accessToken: mapboxgl.accessToken
+                }), 'top-left');
+
+
+
                // L.marker([JSON.stringify(json.features[0].center[0]), JSON.stringify(json.features[0].center[1])]).addTo({{  courseDict["course_acr"] + day  }}Map);
 
             });

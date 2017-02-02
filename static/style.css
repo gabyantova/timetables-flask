@@ -37,7 +37,7 @@ body { margin:0; padding:0; }
 
 .container{
     width: 100%;
-    top: 131px;
+    top: 170px;
     position: relative;
     padding: 0;
 }
@@ -63,4 +63,9 @@ body { margin:0; padding:0; }
 .course_acr{
     font-size: 15px;
     color: darkslateblue;
+}
+
+.nav-tabs > li {
+    width: 50%;
+    text-align: center;
 }
