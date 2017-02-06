@@ -21,7 +21,7 @@
     <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v3.0.3/mapbox-gl-directions.css' type='text/css' />
 
 
-    
+
 
     <script>
 
@@ -199,7 +199,8 @@ u'Fri': [
 
 
                 {{courseDict["course_acr"] + day}}Map.addControl(new MapboxDirections({
-                    accessToken: mapboxgl.accessToken
+                    accessToken: mapboxgl.accessToken,
+                    unit: 'metric'
                 }), 'top-left');
 
 
