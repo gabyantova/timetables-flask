@@ -4,13 +4,7 @@ import datetime
 import re
 import ast
 
-def Content():
-    TOPIC_DICT = {"Basics":[["Introduction to Python","/introduction-to-python-programming/"],
-                            ["Print functions and Strings","/python-tutorial-print-function-strings/"],
-                            ["Math basics with Python 3","/math-basics-python-3-beginner-tutorial/"]],
-                  "Web Dev":[]}
 
-    return TOPIC_DICT
 
 
 def myFunc():
@@ -98,13 +92,13 @@ def Get_content_dict():
                 day_of_the_week = row_item.text
                 first = False
             else: 
-                print("rowitem:")
-                print(row_item)
+                #print("rowitem:")
+                #print(row_item)
                 #courses_that_hour = row_item.find_all("strong")
                 courses_that_hour_p = row_item.find_all("p")
                 courses_that_hour_div = row_item.find_all("div")
                 courses_that_hour = courses_that_hour_p + courses_that_hour_div
-                print(row_item)
+                #print(row_item)
                 if not(courses_that_hour):
                     courses_that_hour = [row_item]#.find_all("td")
                 final_array_courses_that_hour = []

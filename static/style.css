@@ -69,3 +69,28 @@ body { margin:0; padding:0; }
     width: 50%;
     text-align: center;
 }
+
+.modal-well{
+    width: 70px;
+    height: 70px;
+    background-color: #E6E4E0;
+    line-height: 0.6;
+    text-align: center;
+}
+
+.big-icon{
+    font-size:55px;
+}
+
+.course-details{
+    margin: 0 5px 0 5px;
+    padding: 10px 0;
+}
+
+.homepage-icon{
+    font-size: 34px;
+}
+
+.homepage-text{
+    font-size: 11px;
+}

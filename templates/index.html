@@ -178,38 +178,74 @@ u'Fri': [
                                      tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 
                                     <script>
-        $('#{{  courseDict["course_acr"] + "-" + day  }}-modal').on('shown.bs.modal', function() {
-        //$(document).ready(function(){
 
-            //$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/{{  addressToUrl(matchVenue(courseDict["course_details"]))  }}edinburgh%20uk.json?access_token=pk.eyJ1IjoiZ2FieWFudG92YSIsImEiOiJjaXlhNXRsOW8wMDIyMzNxcDdxdTk3dGcwIn0.gNNtUvGPe9zNblVthu__Yg", function(json) {
-               //alert("JSON Data: {{addressToUrl(matchVenue(courseDict["course_details"]))}} " );
-                //$('.test').html("JSON Data: " + JSON.stringify(json.features.center[0]))
-                var {{  courseDict["course_acr"] + day  }}Map = new mapboxgl.Map({
-                    container: '{{  courseDict["course_acr"] + "-" + day  }}-map',
-                    style: 'mapbox://styles/mapbox/streets-v9',
-                    zoom: 16,
-                    center: [
-                            {{  matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"])))[0] }},
-                            {{  matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"])))[1] }}
-                            ]
 
-                            //[JSON.stringify(json.features[0].center[0]), JSON.stringify(json.features[0].center[1])]
-                });
+                                    var {{ courseDict["course_acr"] + day }}Coordinates = {{  matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"])))  }};
+
+
+                                $('#{{  courseDict["course_acr"] + "-" + day  }}-modal').on('shown.bs.modal', function() {
+
+                                    var {{  courseDict["course_acr"] + day  }}Map = new mapboxgl.Map({
+                                        container: '{{  courseDict["course_acr"] + "-" + day  }}-map',
+                                        style: 'mapbox://styles/mapbox/streets-v9',
+                                        zoom: 16,
+                                        center: {{ courseDict["course_acr"] + day }}Coordinates
+                                    });
 
 
 
-                {{courseDict["course_acr"] + day}}Map.addControl(new MapboxDirections({
-                    accessToken: mapboxgl.accessToken,
-                    unit: 'metric'
-                }), 'top-left');
+                                    var {{courseDict["course_acr"] + day}}Directions = new MapboxDirections({
+                                        accessToken: mapboxgl.accessToken,
+                                        profile: 'mapbox.walking',
+                                        unit: 'metric'
+                                    });
+
+                                    {{courseDict["course_acr"] + day}}Map.addControl({{courseDict["course_acr"] + day}}Directions, 'top-left');
+                                    {{courseDict["course_acr"] + day}}Directions.setDestination({{ courseDict["course_acr"] + day }}Coordinates)
+
+
+                        // Markers
+                                {{  courseDict["course_acr"] + day  }}Map.on('load', function () {
+
+                                    {{  courseDict["course_acr"] + day  }}Map.addLayer({
+                                        "id": "points",
+                                        "type": "symbol",
+                                        "source": {
+                                            "type": "geojson",
+                                            "data": {
+                                                "type": "FeatureCollection",
+                                                "features": [{
+                                                    "type": "Feature",
+                                                    "geometry": {
+                                                        "type": "Point",
+                                                        "coordinates": {{  matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"])))  }}
+                                                    },
+                                                    "properties": {
+
+                                                        "icon": "college"
+                                                    }
+                                                }]
+                                            }
+                                        },
+                                        "layout": {
+                                            "icon-image": "{icon}-15",
+                                            "text-field": "{title}",
+                                            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+                                            "text-offset": [0, 0.6],
+                                            "text-anchor": "top"
+                                        }
+                                    });
+                                });
 
 
 
-               // L.marker([JSON.stringify(json.features[0].center[0]), JSON.stringify(json.features[0].center[1])]).addTo({{  courseDict["course_acr"] + day  }}Map);
 
-            });
 
-       //});
+
+
+                    });
+
+
 
 
 
@@ -235,13 +271,29 @@ u'Fri': [
                                             <div class="modal-body">
                                                 {% if courseDict["course_acr"] in COURSE_DICT %}
                                                 <div class="course-details">
+                                                    <div class="row course-details-container">
+                                                        <div class="course-details well well-sm modal-well col-sm-4">
+                                                            <p class = "big-icon homepage-icon"><a target="_blank" href="{% if courseDict["course_acr"] in COURSE_DICT %}
+                                                                                                            {{(COURSE_DICT[courseDict["course_acr"]])['course_url']}}
+                                                                                                            {% endif %}
+                                                                                                            "><span class="glyphicon glyphicon-home"></span></a></p>
+                                                            <p class="homepage-text">HOMEPAGE</p></div>
+                                                        <div class="course-details well well-sm modal-well col-sm-4">
+                                                            <p class = "big-icon">{{ COURSE_DICT[courseDict["course_acr"]]['year'] }}</p>
+                                                            <p>YEAR</p>
+                                                        </div>
+                                                        <div class="course-details well well-sm modal-well col-sm-4">
+                                                            <p class = "big-icon">{{ COURSE_DICT[courseDict["course_acr"]]['credits'] }}</p>
+                                                            <p>CREDITS</p>
+                                                        </div>
+
+                                                        </div>
+
                                                     <p>{{day}} </p>
-                                                    <p>CREDITS: {{ COURSE_DICT[courseDict["course_acr"]]['credits']
-                                                        }}</p>
-                                                    <p>YEAR: {{ COURSE_DICT[courseDict["course_acr"]]['year'] }}</p>
-                                                    <p>VENUE: {{ mostSimilar(UOE_VENUE_DATA,
+                                                    <p></p>
+                                                    <p><span class="glyphicon glyphicon-education"></span> {{ mostSimilar(UOE_VENUE_DATA,
                                                         matchVenue(courseDict["course_details"])) }}</p>
-                                                    <p>ADDRESS: {{ matchNameInJsonToDict(UOE_VENUE_DATA,
+                                                    <p><span class="glyphicon glyphicon-map-marker"></span> {{ matchNameInJsonToDict(UOE_VENUE_DATA,
                                                         mostSimilar(UOE_VENUE_DATA,
                                                         matchVenue(courseDict["course_details"])))['address1'] }},
                                                         {{ matchNameInJsonToDict(UOE_VENUE_DATA,
@@ -253,11 +305,11 @@ u'Fri': [
                                                 <div id="{{  courseDict['course_acr'] + '-' + day  }}-map"
                                                      class='map'></div>
                                                 {% endif %}
-                                                <a target="_blank" href="
-                        {% if courseAcr in COURSE_DICT %}
-                            {{(COURSE_DICT[courseAcr])['course_url']}}
-                        {% endif %}
-                        "><span class="glyphicon glyphicon-home"></span></a>
+                                                <!--<a target="_blank" href="{% if courseAcr in COURSE_DICT %}-->
+                                                                            <!--{{(COURSE_DICT[courseAcr])['course_url']}}-->
+                                                                        <!--{% endif %}-->
+                                                                        <!--"><span class="glyphicon glyphicon-home"></span>-->
+                                                <!--</a>-->
 
                                             </div>
                                             <div class="modal-footer">

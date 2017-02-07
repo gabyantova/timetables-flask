@@ -6,7 +6,6 @@ import urllib
 import datetime
 from difflib import SequenceMatcher
 
-TOPIC_DICT = Content()
 WEEKDAYS = Weekdays()
 URL = Get_url()
 COURSE_DICT = Get_course_dict()
@@ -28,7 +27,6 @@ for time in times:
 
 
 contents = soup.table.tbody.find_all("tr")
-print(VENUE_DICT)
 
 app = Flask(__name__)
 
@@ -57,7 +55,7 @@ def utility_processor():
             for key in venue_dict.keys():
 
                 if key in item_no_spaces:
-                    print("'" + key + "'"  + " : " + "'" + item_no_spaces + "'")
+                    #print("'" + key + "'"  + " : " + "'" + item_no_spaces + "'")
                     return venue_dict[key]["venue_name"]
 
     def addressToUrl(address):
@@ -133,7 +131,6 @@ def utility_processor():
 @app.route('/')
 def homepage():
     return render_template("index.html",
-    TOPIC_DICT = TOPIC_DICT,
     WEEKDAYS = WEEKDAYS,
     TIMES_LIST = TIMES_LIST,
     COURSE_DICT = COURSE_DICT,
