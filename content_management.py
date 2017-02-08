@@ -76,49 +76,43 @@ def Get_UOE_venue_data():
 
 
 def Get_content_dict():
-    content_dict = {}
+    semesters_list = []
 
     soup = BeautifulSoup(urllib.urlopen(Get_url()).read())
-    contents = soup.table.tbody.find_all("tr")
+    tables = soup.find_all("table")
 
-    for content in contents:
-        row_items = content.find_all("td")
-        first = True
-        day_of_the_week = ""
-        counter = 0
-        for row_item in row_items:
-            if first:
-                content_dict[row_item.text] = []
-                day_of_the_week = row_item.text
-                first = False
-            else: 
-                #print("rowitem:")
-                #print(row_item)
-                #courses_that_hour = row_item.find_all("strong")
-                courses_that_hour_p = row_item.find_all("p")
-                courses_that_hour_div = row_item.find_all("div")
-                courses_that_hour = courses_that_hour_p + courses_that_hour_div
-                #print(row_item)
-                if not(courses_that_hour):
-                    courses_that_hour = [row_item]#.find_all("td")
-                final_array_courses_that_hour = []
-                
-                
+    for table in tables:
+        semester_dict = {}
+        final_array_courses_that_hour = []
+        contents = table.tbody.find_all("tr")
+        for content in contents:
+            row_items = content.find_all("td")
+            first = True
+            day_of_the_week = ""
+            for row_item in row_items:
+                if first:
+                    semester_dict[row_item.text] = []
+                    day_of_the_week = row_item.text
+                    first = False
+                else:
+                    courses_that_hour_p = row_item.find_all("p")
+                    courses_that_hour_div = row_item.find_all("div")
+                    courses_that_hour = courses_that_hour_p + courses_that_hour_div
+                    if not(courses_that_hour):
+                        courses_that_hour = [row_item]#.find_all("td")
+                    final_array_courses_that_hour = []
+                    for course_that_hour in courses_that_hour:
+                        if re.search("\[[0-9]\]", course_that_hour.text):
+                            array_course_that_hour = []
+                            dict_course_that_hour = {}
+                            first_split = course_that_hour.text.split("[", 1) #split on first square bracket
+                            second_split = first_split[1].split("]", 1)
+                            array_course_that_hour.append(first_split[0])
+                            array_course_that_hour.extend(second_split)
+                            dict_course_that_hour = {'course_acr' : array_course_that_hour[0].strip(), 'course_year' : array_course_that_hour[1].strip(), 'course_details' : array_course_that_hour[2]}
+                            final_array_courses_that_hour.append(dict_course_that_hour)
+                    semester_dict[day_of_the_week].append(final_array_courses_that_hour)
 
-                #print(courses_that_hour)
-                for course_that_hour in courses_that_hour:
-                    if re.search("\[[0-9]\]", course_that_hour.text):
-                        array_course_that_hour = []
-                        dict_course_that_hour = {}
-                        first_split = course_that_hour.text.split("[", 1) #split on first square bracket
-                        second_split = first_split[1].split("]", 1)
-                        array_course_that_hour.append(first_split[0])
-                        array_course_that_hour.extend(second_split)
-
-                        dict_course_that_hour = {'course_acr' : array_course_that_hour[0].strip(), 'course_year' : array_course_that_hour[1].strip(), 'course_details' : array_course_that_hour[2]}
-
-                        final_array_courses_that_hour.append(dict_course_that_hour)
-                content_dict[day_of_the_week].append(final_array_courses_that_hour)
-    #print content_dict
-
-    return content_dict
+        semesters_list.append(semester_dict)
+    print semesters_list[1]
+    return semesters_list

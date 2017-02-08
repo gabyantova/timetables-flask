@@ -117,9 +117,9 @@ u'Fri': [
         <h2>Lecture Timetable 2016-2017</h2>
         <ul class="nav nav-tabs">
             <li class="active">
-                <a href="#1" data-toggle="tab">Semester 1</a>
+                <a href="#0" data-toggle="tab">Semester 1</a>
             </li>
-            <li><a href="#2" data-toggle="tab">Semester 2</a>
+            <li><a href="#1" data-toggle="tab">Semester 2</a>
             </li>
         </ul>
 
@@ -145,8 +145,8 @@ u'Fri': [
                 <!--<div id='map-one' class='map'> </div>-->
                 <!--<div id='map-one' class='map'> </div>-->
             </div>
-
-            <div class="tab-pane active" id="1">
+            {%  for x in range(2) %}
+            <div class="tab-pane active" id="{{x}}">
                 <table class="table">
                     <tbody>
 
@@ -156,7 +156,7 @@ u'Fri': [
                         <td> <p class = "dayOfTheWeek">{{day}}</p></td>
 
 
-                        {% for hourSlot in CONTENT_DICT[day[0:3]] %}
+                        {% for hourSlot in CONTENT_DICT[x][day[0:3]] %}
                         <div>
                             <td>
                                 {% for courseDict in hourSlot %}
@@ -332,18 +332,8 @@ u'Fri': [
                     </tbody>
                 </table>
             </div>
+            {%  endfor %}
 
-            <div class="tab-pane" id="2">
-                <h3>SEMESTER 2</h3>
-                <h3>SEMESTER 2</h3>
-                <h3>SEMESTER 2</h3>
-                <h3>SEMESTER 2</h3>
-                <h3>SEMESTER 2</h3>
-                <h3>SEMESTER 2</h3>
-                <h3>SEMESTER 2</h3>
-                <h3>SEMESTER 2</h3>
-                <h3>SEMESTER 2</h3>
-        </div>
         </div>
 
     </div>
