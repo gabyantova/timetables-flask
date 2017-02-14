@@ -1,3 +1,89 @@
+$(function () {
+
+
+var $filterCheckboxes = $('input[type="checkbox"]');
+
+$filterCheckboxes.on('change', function() {
+
+  var selectedFilters = {};
+
+  $filterCheckboxes.filter(':checked').each(function() {
+
+    if (!selectedFilters.hasOwnProperty(this.name)) {
+      selectedFilters[this.name] = [];
+    }
+
+    selectedFilters[this.name].push(this.value);
+
+  });
+
+  // create a collection containing all of the filterable elements
+  var $filteredResults = $('.subject');
+
+  // loop over the selected filter name -> (array) values pairs
+  $.each(selectedFilters, function(name, filterValues) {
+
+    // filter each .flower element
+    $filteredResults = $filteredResults.filter(function() {
+
+      var matched = false,
+        currentFilterValues = $(this).data('category').split(' ');
+
+      // loop over each category value in the current .flower's data-category
+      $.each(currentFilterValues, function(_, currentFilterValue) {
+
+        // if the current category exists in the selected filters array
+        // set matched to true, and stop looping. as we're ORing in each
+        // set of filters, we only need to match once
+
+        if ($.inArray(currentFilterValue, filterValues) != -1) {
+          matched = true;
+          return false;
+        }
+      });
+
+      // if matched is true the current .flower element is returned
+      return matched;
+
+    });
+  });
+
+  $('.subject').hide().filter($filteredResults).show();
+
+});
+
+    // var $chkbxFilter_all = $('#all');
+    //
+    // //When you click "ALL", the other checkboxes turn off.
+    // $chkbxFilter_all.click(function() {
+    // 	  $(".sort").prop('checked',false);
+    // 	  $chkbxFilter_all.prop('checked',true);
+    // });
+    //
+    // //The action when the checkboxes is clicked.
+    // $("#select label input").click(function() {
+    //
+    //    $(this).parent().toggleClass("selected");
+    //
+    //    $.each($chkbxFilter_tags, function() {
+    //        if($('#' + this).is(':checked')) {
+    //                     $("#result " + $chkbxFilter_blocks + ":not(." + this + ")").addClass('hidden-not-' + this);
+    //                     $chkbxFilter_all.prop('checked',false).parent().removeClass("selected");
+    //            }
+    //        else if($('#' + this).not(':checked')) {
+    //                     $("#result " + $chkbxFilter_blocks + ":not(." + this + ")").removeClass('hidden-not-' + this);
+    //            }
+    //    });
+    //
+    //    //If all checkboxes is not selected, add class="selected" to "ALL".
+    //    if ($('.sort:checked').length == 0 ){
+    //        $chkbxFilter_all.prop('checked',true).parent().addClass("selected");
+    //        $(".sort").parent().removeClass("selected");
+    //    }
+    // });
+});
+
+
 ///*var logo = $("#logo");
 //
 //logo.on("scroll", function(e) {
