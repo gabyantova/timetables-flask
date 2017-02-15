@@ -1,56 +1,205 @@
 $(function () {
 
+    // //When you click "ALL", the other checkboxes turn off.
 
-var $filterCheckboxes = $('input[type="checkbox"]');
 
-$filterCheckboxes.on('change', function() {
+    // var $chkbxFilter_all = $('#all');
+    //
+    // $chkbxFilter_all.click(function () {
+    //     $(".sort").prop('checked', false);
+    //     $chkbxFilter_all.prop('checked', true);
+    // });
+    var bySubject = [], byYear = [], byLocation = [];
 
-  var selectedFilters = {};
+    $("input[name=subject]").on("change", function () {
+        if (this.checked) bySubject.push("[data-category~='" + $(this).attr("value") + "']");
+        else removeA(bySubject, "[data-category~='" + $(this).attr("value") + "']");
+    });
 
-  $filterCheckboxes.filter(':checked').each(function() {
+    $("input[name=year]").on("change", function () {
+        if (this.checked) byYear.push("[data-category~='" + $(this).attr("value") + "']");
+        else removeA(byYear, "[data-category~='" + $(this).attr("value") + "']");
+    });
+    //
+    // $("input[name=fl-cont]").on("change", function () {
+    //     if (this.checked) byLocation.push("[data-category~='" + $(this).attr("value") + "']");
+    //     else removeA(byLocation, "[data-category~='" + $(this).attr("value") + "']");
+    // });
 
-    if (!selectedFilters.hasOwnProperty(this.name)) {
-      selectedFilters[this.name] = [];
-    }
+    $("input").on("change", function () {
+        var str = "Include items \n";
+        var selector = '', yearSelector = '', nselector = '';
 
-    selectedFilters[this.name].push(this.value);
+        var $lis = $('.table div'), $checked = $('input:checked');
 
-  });
+        if ($checked.length) {
 
-  // create a collection containing all of the filterable elements
-  var $filteredResults = $('.subject');
+            if (bySubject.length) {
+                if (str == "Include items \n") {
+                    str += "    " + "with (" + bySubject.join(',') + ")\n";
+                    $($('input[name=subject]:checked')).each(function (index, bySubject) {
+                        if (selector === '') {
+                            selector += "[data-category~='" + bySubject.id + "']";
+                        } else {
+                            selector += ",[data-category~='" + bySubject.id + "']";
+                        }
+                    });
+                } else {
+                    str += "    AND " + "with (" + bySubject.join(' OR ') + ")\n";
+                    $($('input[name=subject]:checked')).each(function (index, bySubject) {
+                        selector += "[data-category~='" + bySubject.id + "']";
+                    });
+                }
+            }
 
-  // loop over the selected filter name -> (array) values pairs
-  $.each(selectedFilters, function(name, filterValues) {
+            if (byYear.length) {
+                if (str == "Include items \n") {
+                    str += "    " + "with (" + byYear.join(' OR ') + ")\n";
+                    $($('input[name=year]:checked')).each(function (index, byYear) {
+                        if (selector === '') {
+                            selector += "[data-category~='" + byYear.id + "']";
+                        } else {
+                            selector += ",[data-category~='" + byYear.id + "']";
+                        }
+                    });
+                } else {
+                    str += "    AND " + "with (" + byYear.join(' OR ') + ")\n";
+                    $($('input[name=year]:checked')).each(function (index, byYear) {
+                        if (yearSelector === '') {
+                            yearSelector += "[data-category~='" + byYear.id + "']";
+                        } else {
+                            yearSelector += ",[data-category~='" + byYear.id + "']";
+                        }
+                    });
+                }
+            }
 
-    // filter each .flower element
-    $filteredResults = $filteredResults.filter(function() {
+            // if (byLocation.length) {
+            //     if (str == "Include items \n") {
+            //         str += "    " + "with (" + byLocation.join(' OR ') + ")\n";
+            //         $($('input[name=fl-cont]:checked')).each(function (index, byLocation) {
+            //             if (selector === '') {
+            //                 selector += "[data-category~='" + byLocation.id + "']";
+            //             } else {
+            //                 selector += ",[data-category~='" + byLocation.id + "']";
+            //             }
+            //         });
+            //     } else {
+            //         str += "    AND " + "with (" + byLocation.join(' OR ') + ")\n";
+            //         $($('input[name=fl-cont]:checked')).each(function (index, byLocation) {
+            //             if (nselector === '') {
+            //                 nselector += "[data-category~='" + byLocation.id + "']";
+            //             } else {
+            //                 nselector += ",[data-category~='" + byLocation.id + "']";
+            //             }
+            //         });
+            //     }
+            // }
 
-      var matched = false,
-        currentFilterValues = $(this).data('category').split(' ');
+            $lis.hide();
+            console.log(selector);
+            console.log(yearSelector);
+            console.log(nselector);
 
-      // loop over each category value in the current .flower's data-category
-      $.each(currentFilterValues, function(_, currentFilterValue) {
+            if (yearSelector === '' && selector === '') {
+                $lis.show();
+            }
+            else if (yearSelector === '') {
+                $('.table div').filter(selector).show();
+            } else {
+                $('.table div').filter(selector).filter(yearSelector).show();
+            }
 
-        // if the current category exists in the selected filters array
-        // set matched to true, and stop looping. as we're ORing in each
-        // set of filters, we only need to match once
-
-        if ($.inArray(currentFilterValue, filterValues) != -1) {
-          matched = true;
-          return false;
+        } else {
+            $lis.show();
         }
-      });
 
-      // if matched is true the current .flower element is returned
-      return matched;
+        $("#whatfilters").html(str);
 
     });
-  });
 
-  $('.subject').hide().filter($filteredResults).show();
+    function removeA(arr) {
+        var what, a = arguments, L = a.length, ax;
+        while (L > 1 && arr.length) {
+            what = a[--L];
+            while ((ax = arr.indexOf(what)) !== -1) {
+                arr.splice(ax, 1);
+            }
+        }
+        return arr;
+    }
 
-});
+    // var $filterCheckboxes = $('input[type="checkbox"]');
+    //
+    // $filterCheckboxes.on('change', function () {
+    //
+    //     var selectedFilters = {};
+    //
+    //     $filterCheckboxes.filter(':checked').each(function () {
+    //
+    //         if (!selectedFilters.hasOwnProperty(this.name)) {
+    //             selectedFilters[this.name] = [];
+    //         }
+    //
+    //         selectedFilters[this.name].push(this.value);
+    //
+    //     });
+    //
+    //     // create a collection containing all of the filterable elements
+    //     var $filteredResults = $('.subject');
+    //
+    //     // loop over the selected filter name -> (array) values pairs
+    //     $.each(selectedFilters, function (name, filterValues) {
+    //
+    //         // filter each .flower element
+    //         $filteredResults = $filteredResults.filter(function () {
+    //
+    //             var matched = false,
+    //                 currentFilterValues = $(this).data('category').split(' ');
+    //
+    //             // loop over each category value in the current .flower's data-category
+    //             $.each(currentFilterValues, function (_, currentFilterValue) {
+    //
+    //                 // if the current category exists in the selected filters array
+    //                 // set matched to true, and stop looping. as we're ORing in each
+    //                 // set of filters, we only need to match once
+    //
+    //                 if ($.inArray(currentFilterValue, filterValues) != -1) {
+    //                     matched = true;
+    //                     return false;
+    //                 }
+    //
+    //
+    //                 //figure this one out
+    //                 // function containsAll(needles, haystack) {
+    //                 //     for (var i = 0, len = needles.length; i < len; i++) {
+    //                 //         if ($.inArray(needles[i], haystack) == -1) return false;
+    //                 //     }
+    //                 //     return true;
+    //                 // }
+    //                 //
+    //                 //
+    //                 //
+    //                 // if (containsAll(currentFilterValue, filterValues) == true) {
+    //                 //     matched = true;
+    //                 // }
+    //
+    //
+    //             });
+    //
+    //             // if matched is true the current .flower element is returned
+    //             return matched;
+    //
+    //         });
+    //     });
+    //
+    //     $('.subject').hide().filter($filteredResults).show();
+    //
+    // });
+    //
+    //
+    //
+
 
     // var $chkbxFilter_all = $('#all');
     //
