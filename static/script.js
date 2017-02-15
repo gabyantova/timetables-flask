@@ -28,9 +28,9 @@ $(function () {
 
     $("input").on("change", function () {
         var str = "Include items \n";
-        var selector = '', yearSelector = '', nselector = '';
+        var selector = '', yearSelector = '';
 
-        var $lis = $('.table div'), $checked = $('input:checked');
+        var $lis = $('.table >tbody >tr >td > .subject'), $checked = $('input:checked');
 
         if ($checked.length) {
 
@@ -74,43 +74,26 @@ $(function () {
                 }
             }
 
-            // if (byLocation.length) {
-            //     if (str == "Include items \n") {
-            //         str += "    " + "with (" + byLocation.join(' OR ') + ")\n";
-            //         $($('input[name=fl-cont]:checked')).each(function (index, byLocation) {
-            //             if (selector === '') {
-            //                 selector += "[data-category~='" + byLocation.id + "']";
-            //             } else {
-            //                 selector += ",[data-category~='" + byLocation.id + "']";
-            //             }
-            //         });
-            //     } else {
-            //         str += "    AND " + "with (" + byLocation.join(' OR ') + ")\n";
-            //         $($('input[name=fl-cont]:checked')).each(function (index, byLocation) {
-            //             if (nselector === '') {
-            //                 nselector += "[data-category~='" + byLocation.id + "']";
-            //             } else {
-            //                 nselector += ",[data-category~='" + byLocation.id + "']";
-            //             }
-            //         });
-            //     }
-            // }
-
             $lis.hide();
             console.log(selector);
             console.log(yearSelector);
-            console.log(nselector);
-
-            if (yearSelector === '' && selector === '') {
-                $lis.show();
-            }
-            else if (yearSelector === '') {
-                $('.table div').filter(selector).show();
+            if (yearSelector === '') {
+                $lis.filter(selector).show();
             } else {
-                $('.table div').filter(selector).filter(yearSelector).show();
+                $lis.filter(selector).filter(yearSelector).show();
             }
 
-        } else {
+
+            /*if ($checked.length == 0) {
+             $('.table div').show();
+             }
+             else if (yearSelector === '') {
+             $('.table div').filter(selector).show();
+             } else {
+             $('.table div').filter(selector).filter(yearSelector).show();
+             }*/
+        }
+        else {
             $lis.show();
         }
 

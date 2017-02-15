@@ -10,7 +10,7 @@ body { margin:0; padding:0; }
     background-color: white;
 }
 #logo{
-    width: 350px;
+    width: 300px;
     height: auto;
 }
 #header-table{
@@ -60,10 +60,7 @@ body { margin:0; padding:0; }
     height:350px;
     }
 
-.course_acr{
-    font-size: 15px;
-    color: darkslateblue;
-}
+
 
 .nav-tabs > li {
     width: 50%;
@@ -84,7 +81,7 @@ body { margin:0; padding:0; }
 
 .course-details{
     margin: 0 5px 0 5px;
-    padding: 10px 0;
+    padding: 10px 10px;
 }
 
 .homepage-icon{
@@ -93,4 +90,23 @@ body { margin:0; padding:0; }
 
 .homepage-text{
     font-size: 11px;
+}
+
+#result [class*="hidden-"]{display: none;}
+
+
+.course_acr{
+    font-size: 17px;
+    color: darkslateblue;
+}
+
+
+.course_name{
+  font-size: 12px;
+}
+
+.course-box{
+    text-align: center;
+    line-height: 1.2;
+    padding: 9px
 }
