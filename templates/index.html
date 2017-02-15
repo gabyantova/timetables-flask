@@ -125,28 +125,44 @@ u'Fri': [
                 <input type="radio" id="all" checked="checked">
                 ALL
             </label>
-            <label>
-                <input type="checkbox" value="AI" id="AI" class="sort"/>
+            <label for="AI">
+                <input type="checkbox" name="subject" value="AI" id="AI" class="sort"/>
                 AI
             </label>
-            <label>
-                <input type="checkbox" value="CG" id="CG" class="sort"/>
+            <label for="CG">
+                <input type="checkbox" name="subject" value="CG" id="CG" class="sort"/>
                 CG
             </label>
-            <label>
-                <input type="checkbox" value="CS" id="CS" class="sort"/>
+            <label for="CS">
+                <input type="checkbox" name="subject" value="CS" id="CS" class="sort"/>
                 CS
             </label>
-            <label>
-                <input type="checkbox" value="SE" id="SE" class="sort"/>
+            <label for="SE">
+                <input type="checkbox" name="subject" value="SE" id="SE" class="sort"/>
                 SE
             </label>
-            <label>
-                <input type="checkbox" value="unclassified" id="unclassified" class="sort"/>
+            <label for="unclassified">
+                <input type="checkbox" name="subject" value="unclassified" id="unclassified" class="sort"/>
                 Unclassified
             </label>
+            <label>
+                <input type="checkbox" name="year" value="year1" id="year1" class="sort"/>
+                Year 1
+            </label>
+            <label>
+                <input type="checkbox" name="year" value="year2" id="year2" class="sort"/>
+                Year 2
+            </label>
+            <label>
+                <input type="checkbox" name="year" value="year3" id="year3" class="sort"/>
+                Year 3
+            </label>
+            <label>
+                <input type="checkbox" name="year" value="year4" id="year4" class="sort"/>
+                Year 4
+            </label>
         </div>
-
+        <div id="whatfilters"></div>
         <ul class="nav nav-tabs">
             <li class="active">
                 <a href="#0" data-toggle="tab">Semester 1</a>
@@ -193,31 +209,7 @@ u'Fri': [
                                     <div>
                                     <td>
                                         {% for courseDict in hourSlot %}
-                                            <div data-category="year
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                    {% if courseDict['course_acr'] in COURSE_DICT %}{{ COURSE_DICT[courseDict['course_acr']]['year'] }} {% for type in COURSE_DICT[courseDict['course_acr']]['types'] %} {{ type }} {% if not COURSE_DICT[courseDict['course_acr']]['types'] %} {{ 'unclassified' }} {% endif %}{% endfor %}{% endif %} "
+                                            <div data-category="year{% if courseDict['course_acr'] in COURSE_DICT %}{{ COURSE_DICT[courseDict['course_acr']]['year'] }} {% for type in COURSE_DICT[courseDict['course_acr']]['types'] %} {{ type }} {% if not COURSE_DICT[courseDict['course_acr']]['types'] %} {{ 'unclassified' }} {% endif %}{% endfor %}{% endif %} "
                                                  class="well well-sm pointer course-box subject"
                                                  data-toggle="modal"
                                                  data-target="#{{ courseDict['course_acr'] + '-' + day }}-modal">
@@ -294,36 +286,36 @@ u'Fri': [
                                                                 }
                                                             });
 
-{#                                                            {{  courseDict["course_acr"] + day  }}Map.addLayer({#}
-{#                                                                "id": "markers",#}
-{#                                                                "type": "symbol",#}
-{#                                                                "source": {#}
-{#                                                                    "type": "geojson",#}
-{#                                                                    "data": {#}
-{#                                                                        "type": "FeatureCollection",#}
-{#                                                                        "features": [{#}
-{#                                                                            "type": "Feature",#}
-{#                                                                            "geometry": {#}
-{#                                                                                "type": "Point",#}
-                                                                                {#                                                                                "coordinates": {{ courseDict["course_acr"] + day }}Coordinates#}
-{#                                                                                "coordinates": {{ matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"]))) }} {#{{ courseDict["course_acr"] + day }}Coordinates#}
-{#                                                                            },#}
-{#                                                                            "properties": {#}
-{#                                                                                "title": "Help Me",#}
-{#                                                                                "icon": "marker"#}
-                                                                                {#                                                                                "marker-symbol": "default_marker"#}
-{#                                                                            }#}
-{#                                                                        }]#}
-{#                                                                    }#}
-{#                                                                },#}
-{#                                                                "layout": {#}
-{#                                                                    "icon-image": "{icon}-15",#}
-{#                                                                    "text-field": "{title}",#}
-{#                                                                    "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],#}
-{#                                                                    "text-offset": [0, 0.6],#}
-{#                                                                    "text-anchor": "top"#}
-{#                                                                }#}
-{#                                                            });#}
+                                                            {#                                                            {{  courseDict["course_acr"] + day  }}Map.addLayer({#}
+                                                            {#                                                                "id": "markers",#}
+                                                            {#                                                                "type": "symbol",#}
+                                                            {#                                                                "source": {#}
+                                                            {#                                                                    "type": "geojson",#}
+                                                            {#                                                                    "data": {#}
+                                                            {#                                                                        "type": "FeatureCollection",#}
+                                                            {#                                                                        "features": [{#}
+                                                            {#                                                                            "type": "Feature",#}
+                                                            {#                                                                            "geometry": {#}
+                                                            {#                                                                                "type": "Point",#}
+                                                            {#                                                                                "coordinates": {{ courseDict["course_acr"] + day }}Coordinates#}
+                                                            {#                                                                                "coordinates": {{ matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"]))) }} {#{{ courseDict["course_acr"] + day }}Coordinates#}
+                                                            {#                                                                            },#}
+                                                            {#                                                                            "properties": {#}
+                                                            {#                                                                                "title": "Help Me",#}
+                                                            {#                                                                                "icon": "marker"#}
+                                                            {#                                                                                "marker-symbol": "default_marker"#}
+                                                            {#                                                                            }#}
+                                                            {#                                                                        }]#}
+                                                            {#                                                                    }#}
+                                                            {#                                                                },#}
+                                                            {#                                                                "layout": {#}
+                                                            {#                                                                    "icon-image": "{icon}-15",#}
+                                                            {#                                                                    "text-field": "{title}",#}
+                                                            {#                                                                    "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],#}
+                                                            {#                                                                    "text-offset": [0, 0.6],#}
+                                                            {#                                                                    "text-anchor": "top"#}
+                                                            {#                                                                }#}
+                                                            {#                                                            });#}
 
 
                                                         })
@@ -432,7 +424,7 @@ u'Fri': [
 
 
                                         {% endfor %}
-                                    </td>
+                                    </td></div>
                                 {% endfor %}
                             </tr>
                         {% endfor %}
