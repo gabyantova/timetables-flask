@@ -207,224 +207,232 @@ u'Fri': [
                                 {% for hourSlot in CONTENT_DICT[x][day[0:3]] %}
 
                                     <div>
-                                    <td>
-                                        {% for courseDict in hourSlot %}
-                                            <div data-category="year{% if courseDict['course_acr'] in COURSE_DICT %}{{ COURSE_DICT[courseDict['course_acr']]['year'] }} {% for type in COURSE_DICT[courseDict['course_acr']]['types'] %} {{ type }} {% if not COURSE_DICT[courseDict['course_acr']]['types'] %} {{ 'unclassified' }} {% endif %}{% endfor %}{% endif %} "
-                                                 class="well well-sm pointer course-box subject"
-                                                 data-toggle="modal"
-                                                 data-target="#{{ courseDict['course_acr'] + '-' + day }}-modal">
-                                                <p class="course_acr"><b>{{ courseDict["course_acr"] }}</b></p>
-                                                {% if courseDict["course_acr"] in COURSE_DICT %}
-                                                    <p class="course_name">{{ (COURSE_DICT[courseDict["course_acr"]])['course'] }}</p>
-                                                    <!--<p>Year: {{ courseDict["course_year"] }}</p>-->
-                                                    <p>{{ matchVenue(courseDict["course_details"]) }}</p>
-
-                                                {% endif %}
-                                            </div>
+                                        <td>
+                                            {% for courseDict in hourSlot %}
 
 
-                                            <!-- Modal -->
+                                                {#{% if courseDict['course_acr'] in COURSE_DICT %}{{ COURSE_DICT[courseDict['course_acr']]['year'] }}{% if COURSE_DICT[courseDict['course_acr']]['types'] is defined %}{% for type in COURSE_DICT[courseDict['course_acr']]['types'] %}{{ type }}{% else %}{{ 'unclassified' }}{% endfor %}{% endif %}{% endif %}#}
 
-                                            <div class="modal fade"
-                                                 id="{{ courseDict['course_acr'] + '-' + day }}-modal"
-                                                 tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+{#                                                <div data-category="year{% if courseDict['course_acr'] in COURSE_DICT %}{{ COURSE_DICT[courseDict['course_acr']]['year'] }} {% for type in COURSE_DICT[courseDict['course_acr']]['types'] %}  {% if type not in COURSE_DICT[courseDict['course_acr']]['types'] %}#}
+                                                <div data-category="year{% if courseDict['course_acr'] in COURSE_DICT %}{{ COURSE_DICT[courseDict['course_acr']]['year'] }} {% if COURSE_DICT[courseDict['course_acr']]['types'] is defined %} {% for type in COURSE_DICT[courseDict['course_acr']]['types'] %} {{ type }} {% else %} {{ 'unclassified' }} {% endfor %}{% endif %}{% endif %} "
+                                                     class="well well-sm pointer course-box subject"
+                                                     data-toggle="modal"
+                                                     data-target="#{{ courseDict['course_acr'] + '-' + day }}-modal">
+                                                    <p class="course_acr"><b>{{ courseDict["course_acr"] }}</b></p>
+                                                    {% if courseDict["course_acr"] in COURSE_DICT %}
+                                                        <p class="course_name">{{ (COURSE_DICT[courseDict["course_acr"]])['course'] }}</p>
+                                                        <!--<p>Year: {{ courseDict["course_year"] }}</p>-->
+                                                        <p>{{ matchVenue(courseDict["course_details"]) }}</p>
 
-                                                <script>
+                                                    {% endif %}
+                                                </div>
 
 
-                                                    var {{courseDict["course_acr"]+day}}Coordinates = {{ matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"]))) }};
-                                                    {#                                                    alert({{courseDict["course_acr"]+day}}Coordinates)#}
+                                                <!-- Modal -->
 
-                                                    $('#{{  courseDict["course_acr"] + "-" + day  }}-modal').on('shown.bs.modal', function () {
+                                                <div class="modal fade"
+                                                     id="{{ courseDict['course_acr'] + '-' + day }}-modal"
+                                                     tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 
-                                                        var {{  courseDict["course_acr"] + day  }}Map = new mapboxgl.Map({
-                                                            container: '{{  courseDict["course_acr"] + "-" + day  }}-map',
-                                                            style: 'mapbox://styles/mapbox/streets-v9',
-                                                            zoom: 16,
-                                                            center: {{ courseDict["course_acr"] + day }}Coordinates
+                                                    <script>
+
+
+                                                        var {{courseDict["course_acr"]+day}}Coordinates = {{ matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"]))) }};
+                                                        {#                                                    alert({{courseDict["course_acr"]+day}}Coordinates)#}
+
+                                                        $('#{{  courseDict["course_acr"] + "-" + day  }}-modal').on('shown.bs.modal', function () {
+
+                                                            var {{  courseDict["course_acr"] + day  }}Map = new mapboxgl.Map({
+                                                                container: '{{  courseDict["course_acr"] + "-" + day  }}-map',
+                                                                style: 'mapbox://styles/mapbox/streets-v9',
+                                                                zoom: 16,
+                                                                center: {{ courseDict["course_acr"] + day }}Coordinates
+                                                            });
+
+
+                                                            var {{courseDict["course_acr"] + day}}Directions = new MapboxDirections({
+                                                                accessToken: mapboxgl.accessToken,
+                                                                profile: 'mapbox.walking',
+                                                                unit: 'metric'
+                                                            });
+
+                                                            {{courseDict["course_acr"] + day}}Map.addControl({{courseDict["course_acr"] + day}}Directions, 'top-left');
+                                                            {{courseDict["course_acr"] + day}}Directions.setDestination({{ courseDict["course_acr"] + day }}Coordinates)
+
+
+                                                            // Markers
+                                                            {{  courseDict["course_acr"] + day  }}Map.on('load', function () {
+
+                                                                {{  courseDict["course_acr"] + day  }}Map.addSource("markers", {
+                                                                    "type": "geojson",
+                                                                    "data": {
+                                                                        "type": "FeatureCollection",
+                                                                        "features": [{
+                                                                            "type": "Feature",
+                                                                            "geometry": {
+                                                                                "type": "Point",
+                                                                                "coordinates": {{ matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"]))) }}
+                                                                            },
+                                                                            "properties": {
+                                                                                "title": "Mapbox DC",
+                                                                                "marker-symbol": "default_marker"
+                                                                            }
+                                                                        }]
+                                                                    }
+                                                                });
+
+                                                                {{  courseDict["course_acr"] + day  }}Map.addLayer({
+                                                                    "id": "markers",
+                                                                    "source": "markers",
+                                                                    "type": "circle",
+                                                                    "paint": {
+                                                                        "circle-radius": 10,
+                                                                        "circle-color": "#007cbf"
+                                                                    }
+                                                                });
+
+                                                                {#                                                            {{  courseDict["course_acr"] + day  }}Map.addLayer({#}
+                                                                {#                                                                "id": "markers",#}
+                                                                {#                                                                "type": "symbol",#}
+                                                                {#                                                                "source": {#}
+                                                                {#                                                                    "type": "geojson",#}
+                                                                {#                                                                    "data": {#}
+                                                                {#                                                                        "type": "FeatureCollection",#}
+                                                                {#                                                                        "features": [{#}
+                                                                {#                                                                            "type": "Feature",#}
+                                                                {#                                                                            "geometry": {#}
+                                                                {#                                                                                "type": "Point",#}
+                                                                {#                                                                                "coordinates": {{ courseDict["course_acr"] + day }}Coordinates#}
+                                                                {#                                                                                "coordinates": {{ matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"]))) }} {#{{ courseDict["course_acr"] + day }}Coordinates#}
+                                                                {#                                                                            },#}
+                                                                {#                                                                            "properties": {#}
+                                                                {#                                                                                "title": "Help Me",#}
+                                                                {#                                                                                "icon": "marker"#}
+                                                                {#                                                                                "marker-symbol": "default_marker"#}
+                                                                {#                                                                            }#}
+                                                                {#                                                                        }]#}
+                                                                {#                                                                    }#}
+                                                                {#                                                                },#}
+                                                                {#                                                                "layout": {#}
+                                                                {#                                                                    "icon-image": "{icon}-15",#}
+                                                                {#                                                                    "text-field": "{title}",#}
+                                                                {#                                                                    "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],#}
+                                                                {#                                                                    "text-offset": [0, 0.6],#}
+                                                                {#                                                                    "text-anchor": "top"#}
+                                                                {#                                                                }#}
+                                                                {#                                                            });#}
+
+
+                                                            })
+                                                            ;
+
+
                                                         });
 
 
-                                                        var {{courseDict["course_acr"] + day}}Directions = new MapboxDirections({
-                                                            accessToken: mapboxgl.accessToken,
-                                                            profile: 'mapbox.walking',
-                                                            unit: 'metric'
-                                                        });
+                                                    </script>
 
-                                                        {{courseDict["course_acr"] + day}}Map.addControl({{courseDict["course_acr"] + day}}Directions, 'top-left');
-                                                        {{courseDict["course_acr"] + day}}Directions.setDestination({{ courseDict["course_acr"] + day }}Coordinates)
-
-
-                                                        // Markers
-                                                        {{  courseDict["course_acr"] + day  }}Map.on('load', function () {
-
-                                                            {{  courseDict["course_acr"] + day  }}Map.addSource("markers", {
-                                                                "type": "geojson",
-                                                                "data": {
-                                                                    "type": "FeatureCollection",
-                                                                    "features": [{
-                                                                        "type": "Feature",
-                                                                        "geometry": {
-                                                                            "type": "Point",
-                                                                            "coordinates": {{ matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"]))) }}
-                                                                        },
-                                                                        "properties": {
-                                                                            "title": "Mapbox DC",
-                                                                            "marker-symbol": "default_marker"
-                                                                        }
-                                                                    }]
-                                                                }
-                                                            });
-
-                                                            {{  courseDict["course_acr"] + day  }}Map.addLayer({
-                                                                "id": "markers",
-                                                                "source": "markers",
-                                                                "type": "circle",
-                                                                "paint": {
-                                                                    "circle-radius": 10,
-                                                                    "circle-color": "#007cbf"
-                                                                }
-                                                            });
-
-                                                            {#                                                            {{  courseDict["course_acr"] + day  }}Map.addLayer({#}
-                                                            {#                                                                "id": "markers",#}
-                                                            {#                                                                "type": "symbol",#}
-                                                            {#                                                                "source": {#}
-                                                            {#                                                                    "type": "geojson",#}
-                                                            {#                                                                    "data": {#}
-                                                            {#                                                                        "type": "FeatureCollection",#}
-                                                            {#                                                                        "features": [{#}
-                                                            {#                                                                            "type": "Feature",#}
-                                                            {#                                                                            "geometry": {#}
-                                                            {#                                                                                "type": "Point",#}
-                                                            {#                                                                                "coordinates": {{ courseDict["course_acr"] + day }}Coordinates#}
-                                                            {#                                                                                "coordinates": {{ matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"]))) }} {#{{ courseDict["course_acr"] + day }}Coordinates#}
-                                                            {#                                                                            },#}
-                                                            {#                                                                            "properties": {#}
-                                                            {#                                                                                "title": "Help Me",#}
-                                                            {#                                                                                "icon": "marker"#}
-                                                            {#                                                                                "marker-symbol": "default_marker"#}
-                                                            {#                                                                            }#}
-                                                            {#                                                                        }]#}
-                                                            {#                                                                    }#}
-                                                            {#                                                                },#}
-                                                            {#                                                                "layout": {#}
-                                                            {#                                                                    "icon-image": "{icon}-15",#}
-                                                            {#                                                                    "text-field": "{title}",#}
-                                                            {#                                                                    "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],#}
-                                                            {#                                                                    "text-offset": [0, 0.6],#}
-                                                            {#                                                                    "text-anchor": "top"#}
-                                                            {#                                                                }#}
-                                                            {#                                                            });#}
+                                                    <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                        aria-label="Close"><span
+                                                                        aria-hidden="true">&times;</span>
+                                                                </button>
+                                                                <h4 class="modal-title" id="myModalLabel">
+                                                                    {% if courseDict["course_acr"] in COURSE_DICT %}
+                                                                        <h2>{{ (COURSE_DICT[courseDict["course_acr"]])['course'] }}</h2>
 
 
-                                                        })
-                                                        ;
+                                                                    {% endif %}</h4>
+                                                            </div>
 
 
-                                                    });
-
-
-                                                </script>
-
-                                                <div class="modal-dialog modal-lg" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close"><span
-                                                                    aria-hidden="true">&times;</span>
-                                                            </button>
-                                                            <h4 class="modal-title" id="myModalLabel">
+                                                            <div class="modal-body">
                                                                 {% if courseDict["course_acr"] in COURSE_DICT %}
-                                                                    <h2>{{ (COURSE_DICT[courseDict["course_acr"]])['course'] }}</h2>
-
-
-                                                                {% endif %}</h4>
-                                                        </div>
-
-
-                                                        <div class="modal-body">
-                                                            {% if courseDict["course_acr"] in COURSE_DICT %}
-                                                                <div class="course-details">
-                                                                    <div class="col-md-4 row course-details-container">
-                                                                        <a target="_blank"
-                                                                           href="{% if courseDict['course_acr'] in COURSE_DICT %}
+                                                                    <div class="course-details">
+                                                                        <div class="col-md-4 row course-details-container">
+                                                                            <a target="_blank"
+                                                                               href="{% if courseDict['course_acr'] in COURSE_DICT %}
                                                                                                             {{ (COURSE_DICT[courseDict['course_acr']])['course_url'] }}
                                                                                                             {% endif %}
                                                                                                             ">
+                                                                                <div class="course-details well well-sm modal-well col-sm-4">
+                                                                                    <p class="big-icon homepage-icon"><span
+                                                                                            class="glyphicon glyphicon-home"></span>
+                                                                                    </p>
+                                                                                    <p class="homepage-text">
+                                                                                        HOMEPAGE</p>
+                                                                                </div>
+                                                                            </a>
                                                                             <div class="course-details well well-sm modal-well col-sm-4">
-                                                                                <p class="big-icon homepage-icon"><span
-                                                                                        class="glyphicon glyphicon-home"></span>
-                                                                                </p>
-                                                                                <p class="homepage-text">HOMEPAGE</p>
+                                                                                <p class="big-icon">{{ COURSE_DICT[courseDict["course_acr"]]['year'] }}</p>
+                                                                                <p>YEAR</p>
                                                                             </div>
-                                                                        </a>
-                                                                        <div class="course-details well well-sm modal-well col-sm-4">
-                                                                            <p class="big-icon">{{ COURSE_DICT[courseDict["course_acr"]]['year'] }}</p>
-                                                                            <p>YEAR</p>
-                                                                        </div>
-                                                                        <div class="course-details well well-sm modal-well col-sm-4">
-                                                                            <p class="big-icon">{{ COURSE_DICT[courseDict["course_acr"]]['credits'] }}</p>
-                                                                            <p>CREDITS</p>
-                                                                        </div>
-                                                                        <a target="_blank"
-                                                                           href="{% if courseDict['course_acr'] in COURSE_DICT %}
+                                                                            <div class="course-details well well-sm modal-well col-sm-4">
+                                                                                <p class="big-icon">{{ COURSE_DICT[courseDict["course_acr"]]['credits'] }}</p>
+                                                                                <p>CREDITS</p>
+                                                                            </div>
+                                                                            <a target="_blank"
+                                                                               href="{% if courseDict['course_acr'] in COURSE_DICT %}
                                                                                                             {{ (COURSE_DICT[courseDict['course_acr']])['drps'] }}
                                                                                                             {% endif %}
                                                                                                             ">
-                                                                            <div class="course-details well well-sm modal-well col-sm-4">
-                                                                                <p class="big-icon homepage-icon"><span
-                                                                                        class="glyphicon glyphicon-home"></span>
-                                                                                </p>
-                                                                                <p class="homepage-text">DRPS</p></div>
-                                                                        </a>
+                                                                                <div class="course-details well well-sm modal-well col-sm-4">
+                                                                                    <p class="big-icon homepage-icon"><span
+                                                                                            class="glyphicon glyphicon-home"></span>
+                                                                                    </p>
+                                                                                    <p class="homepage-text">DRPS</p>
+                                                                                </div>
+                                                                            </a>
 
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <p><span
-                                                                                class="glyphicon glyphicon-time"></span> {{ day }}, {{ TIMES_LIST[loop.index] }}
-                                                                        </p>
-                                                                        <p>
-                                                                            <img src="{{ url_for('static', filename='img/door.svg') }}">
-                                                                            <span class="glyphicon glyphicon-education"></span> {{ courseDict["course_room"] }}
-                                                                        </p>
-                                                                        <p><i class="fa fa-bank"></i> {{ mostSimilar(UOE_VENUE_DATA,
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <p><span
+                                                                                    class="glyphicon glyphicon-time"></span> {{ day }}, {{ TIMES_LIST[loop.index] }}
+                                                                            </p>
+                                                                            <p>
+                                                                                <img id="door" src="{{ url_for('static', filename='img/door.svg') }}">
+                                                                                 {{ courseDict["course_room"] }}
+                                                                            </p>
+                                                                            <p><i class="fa fa-bank"></i> {{ mostSimilar(UOE_VENUE_DATA,
                                                             matchVenue(courseDict["course_details"])) }}</p>
-                                                                        <p><span
-                                                                                class="glyphicon glyphicon-map-marker"></span> {{ matchNameInJsonToDict(UOE_VENUE_DATA,
+                                                                            <p><span
+                                                                                    class="glyphicon glyphicon-map-marker"></span> {{ matchNameInJsonToDict(UOE_VENUE_DATA,
                                                             mostSimilar(UOE_VENUE_DATA,
                                                             matchVenue(courseDict["course_details"])))['address1'] }},
-                                                                            {{ matchNameInJsonToDict(UOE_VENUE_DATA,
+                                                                                {{ matchNameInJsonToDict(UOE_VENUE_DATA,
                                                             mostSimilar(UOE_VENUE_DATA,
                                                             matchVenue(courseDict["course_details"])))['postcode'] }}
-                                                                        </p>
+                                                                            </p>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div id="{{ courseDict['course_acr'] + '-' + day }}-map"
-                                                                     class='map'></div>
-                                                            {% endif %}
-                                                            <!--<a target="_blank" href="
+                                                                    <div id="{{ courseDict['course_acr'] + '-' + day }}-map"
+                                                                         class='map'></div>
+                                                                {% endif %}
+                                                                <!--<a target="_blank" href="
                                                                     {% if courseAcr in COURSE_DICT %}-->
-                                                                <!--{{(COURSE_DICT[courseAcr])['course_url']}}-->
-                                                                <!--{% endif %}-->
-                                                            <!--"><span class="glyphicon glyphicon-home"></span>-->
-                                                            <!--</a>-->
+                                                                    <!--{{(COURSE_DICT[courseAcr])['course_url']}}-->
+                                                                    <!--{% endif %}-->
+                                                                <!--"><span class="glyphicon glyphicon-home"></span>-->
+                                                                <!--</a>-->
 
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default"
-                                                                    data-dismiss="modal">
-                                                                Close
-                                                            </button>
-                                                            <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default"
+                                                                        data-dismiss="modal">
+                                                                    Close
+                                                                </button>
+                                                                <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
 
-                                        {% endfor %}
-                                    </td></div>
+                                            {% endfor %}
+                                        </td>
+                                    </div>
                                 {% endfor %}
                             </tr>
                         {% endfor %}
