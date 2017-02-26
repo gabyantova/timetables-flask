@@ -5,10 +5,6 @@ import re
 import ast
 
 
-def myFunc():
-    return ("HELLO BITCHES!!!!")
-
-
 def Weekdays():
     return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
@@ -47,17 +43,18 @@ def Get_course_dict():
                                               "course_url": url,
                                               "types": course_type,
                                               "drps": drps,
-                                              "level": col_list[7]}
+                                              "level": col_list[7],
+                                              "semester": col_list[10][1]}
 
-    def pretty(d, indent=0):
-        for key, value in d.iteritems():
-            print '\t' * indent + str(key)
-            if isinstance(value, dict):
-                pretty(value, indent + 1)
-            else:
-                print '\t' * (indent + 1) + str(value)
-
-    print pretty(COURSE_DICT)
+    # def pretty(d, indent=0):
+    #     for key, value in d.iteritems():
+    #         print '\t' * indent + str(key)
+    #         if isinstance(value, dict):
+    #             pretty(value, indent + 1)
+    #         else:
+    #             print '\t' * (indent + 1) + str(value)
+    #
+    # print pretty(COURSE_DICT)
 
     return COURSE_DICT
 
@@ -80,6 +77,23 @@ def Get_venue_dict():
             "venue_url": building_code.find("a").get("href")}
 
     return VENUE_DICT
+
+
+def Get_alternate_venue_dict():
+    ALTERNATE_VENUE_DICT = {
+                        'EVOHSE':                    {'venue_url': 'http://www.ed.ac.uk/maps/maps?building=evolution-house',
+                                                      'venue_name': 'Evolution House'},
+                        'GSQ LT':                     {'venue_url': 'http://www.ed.ac.uk/maps/maps?building=george-square-lecture-theatre',
+                                                      'venue_name': 'George Square Lecture Theatre'},
+                        'Informatics Forum':         {'venue_url': 'http://www.ed.ac.uk/maps/maps?building=informatics-forum',
+                                                      'venue_name': 'Informatics Forum'},
+                        '21BP':                      {'venue_url': '',
+                                                      'venue_name': '21 Buccleuch Place'
+
+                                                     }
+                    }
+    print ALTERNATE_VENUE_DICT
+    return ALTERNATE_VENUE_DICT
 
 
 def Get_UOE_venue_data():
@@ -116,14 +130,17 @@ def Get_content_dict():
                     day_of_the_week = row_item.text
                     first = False
                 else:
-                    courses_that_hour_p = row_item.find_all("p")
-                    courses_that_hour_div = row_item.find_all("div")
-                    courses_that_hour = courses_that_hour_p + courses_that_hour_div
+                    courses_that_hour = row_item.find_all(["p", "div"])
+                    #courses_that_hour_div = row_item.find_all("div")
+                    #courses_that_hour = courses_that_hour_p + courses_that_hour_div
+                    onlyOneCourseInTimeslot = False
                     if not (courses_that_hour):
                         courses_that_hour = [row_item]  # .find_all("td")
+                        onlyOneCourseInTimeslot = True
                     final_array_courses_that_hour = []
-                    for course_that_hour in courses_that_hour:
-                        if re.search("\[[0-9]\]", course_that_hour.text):
+                    checkForCourseWithoutATag = True
+                    for index, course_that_hour in enumerate(courses_that_hour):
+                        if re.search("\[[0-9]\]", course_that_hour.text):# and (course_that_hour.text).strip().split(']')[1]:
                             array_course_that_hour = []
                             dict_course_that_hour = {}
                             first_split = course_that_hour.text.split("[", 1)  # split on first square bracket
@@ -136,6 +153,19 @@ def Get_content_dict():
                                                      'course_details': array_course_that_hour[2],
                                                      'course_room': room}
                             final_array_courses_that_hour.append(dict_course_that_hour)
+                            ## if the course details have been separated to be in two <p> or <div> tags
+                            if not room and len(courses_that_hour) >= index+2:
+                                alternative_details = courses_that_hour[index+1].text
+                                dict_course_that_hour['course_room'] = alternative_details.split(",")[0].strip()
+                                dict_course_that_hour['course_details'] = alternative_details
+                        ## after last element has been processed:
+                        if index == len(courses_that_hour)-1 and checkForCourseWithoutATag and not(onlyOneCourseInTimeslot):
+                            checkForCourseWithoutATag = False
+                            emptied_row_item = row_item
+                            for p_and_div_tags in emptied_row_item.find_all(['p', 'div']):
+                                p_and_div_tags.clear()
+                            courses_that_hour.append(emptied_row_item)
+
                     semester_dict[day_of_the_week].append(final_array_courses_that_hour)
 
         semesters_list.append(semester_dict)

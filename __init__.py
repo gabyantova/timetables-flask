@@ -11,9 +11,11 @@ URL = Get_url()
 COURSE_DICT = Get_course_dict()
 CONTENT_DICT = Get_content_dict()
 VENUE_DICT = Get_venue_dict()
+ALTERNATE_VENUE_DICT = Get_alternate_venue_dict()
 UOE_VENUE_DATA = Get_UOE_venue_data()
 
 
+print VENUE_DICT
 soup = BeautifulSoup(urllib.urlopen(URL).read())
 times = soup.table.thead.tr.find_all("th")
 
@@ -44,28 +46,31 @@ def utility_processor():
                 if key in item_no_spaces:
                     return key
 
-    def matchVenue(course_details, venue_dict=VENUE_DICT):
+    def matchVenue(course_details, venue_dict=VENUE_DICT, alternate_venue_dict=ALTERNATE_VENUE_DICT):
 
         course_details_split = course_details.split(",")
 
         course_acr = ""
 
         for item in course_details_split:
-            item_no_spaces = item.replace(" ", "")
+            #item_no_spaces = item.replace(" ", "")
             for key in venue_dict.keys():
-
-                if key in item_no_spaces:
-                    #print("'" + key + "'"  + " : " + "'" + item_no_spaces + "'")
+                if key in item.replace(" ", ""):
                     return venue_dict[key]["venue_name"]
 
-    def addressToUrl(address):
+        for item in course_details_split:
+            #item_no_spaces = item.replace(" ", "")
+            for key in alternate_venue_dict.keys():
+                if key in item: #.replace(" ", ""):
+                    return alternate_venue_dict[key]["venue_name"]
 
+
+    def addressToUrl(address):
         if address:
             addressList = address.split(" ")
             urlAddress = ""
             for word in addressList:
                 urlAddress += word + "%20"
-
             return urlAddress
 
     def similar(a, b):
@@ -136,6 +141,7 @@ def homepage():
     COURSE_DICT = COURSE_DICT,
     CONTENT_DICT = CONTENT_DICT,
     VENUE_DICT = VENUE_DICT,
+    ALTERNATE_VENUE_DICT = ALTERNATE_VENUE_DICT,
     UOE_VENUE_DATA = UOE_VENUE_DATA)
 
 

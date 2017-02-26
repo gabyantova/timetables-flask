@@ -116,51 +116,61 @@ u'Fri': [
 
 
     <div id="header">
-        <img id="logo"
-             src="https://upload.wikimedia.org/wikipedia/en/c/ca/University_of_Edinburgh_School_of_Informatics_logo.jpg">
-        <h2>Lecture Timetable 2016-2017</h2>
-        <div id="select" class="tags">
+        <div class="row">
+            <div id="logo-and-title" class="col-md-6">
+                <img id="logo"
+                 src="https://upload.wikimedia.org/wikipedia/en/c/ca/University_of_Edinburgh_School_of_Informatics_logo.jpg">
+                <h2>Lecture Timetable 2016-2017</h2>
+            </div>
+            <div id="select" class="tags col-md-6">
 
-            <label class="selected">
-                <input type="radio" id="all">
-                ALL
-            </label>
-            <label for="AI">
-                <input type="checkbox" name="subject" value="AI" id="AI" class="sort"/>
-                AI
-            </label>
-            <label for="CG">
-                <input type="checkbox" name="subject" value="CG" id="CG" class="sort"/>
-                CG
-            </label>
-            <label for="CS">
-                <input type="checkbox" name="subject" value="CS" id="CS" class="sort"/>
-                CS
-            </label>
-            <label for="SE">
-                <input type="checkbox" name="subject" value="SE" id="SE" class="sort"/>
-                SE
-            </label>
-            <label for="unclassified">
-                <input type="checkbox" name="subject" value="unclassified" id="unclassified" class="sort"/>
-                Unclassified
-            </label>
-            <label>
-                <input type="checkbox" name="year" value="year1" id="year1" class="sort"/>
-                Year 1
-            </label>
-            <label>
-                <input type="checkbox" name="year" value="year2" id="year2" class="sort"/>
-                Year 2
-            </label>
-            <label>
-                <input type="checkbox" name="year" value="year3" id="year3" class="sort"/>
-                Year 3
-            </label>
-            <label>
-                <input type="checkbox" name="year" value="year4" id="year4" class="sort"/>
-                Year 4
-            </label>
+    {#            <label class="selected">#}
+    {#                <input type="radio" id="all">#}
+    {#                ALL#}
+    {#            </label>#}
+
+                <div id="subject-sorting" class="">
+                    <label for="AI">
+                        <input type="checkbox" name="subject" value="AI" id="AI" class="sort"/>
+                        AI
+                    </label>
+                    <label for="CG">
+                        <input type="checkbox" name="subject" value="CG" id="CG" class="sort"/>
+                        CG
+                    </label>
+                    <label for="CS">
+                        <input type="checkbox" name="subject" value="CS" id="CS" class="sort"/>
+                        CS
+                    </label>
+                    <label for="SE">
+                        <input type="checkbox" name="subject" value="SE" id="SE" class="sort"/>
+                        SE
+                    </label>
+                    <label for="unclassified">
+                        <input type="checkbox" name="subject" value="unclassified" id="unclassified" class="sort"/>
+                        Unclassified
+                    </label>
+                </div>
+                <div id="year-sorting" class="">
+                    <label>
+                        <input type="checkbox" name="year" value="year1" id="year1" class="sort"/>
+                        Year 1
+                    </label>
+                    <label>
+                        <input type="checkbox" name="year" value="year2" id="year2" class="sort"/>
+                        Year 2
+                    </label>
+                    <label>
+                        <input type="checkbox" name="year" value="year3" id="year3" class="sort"/>
+                        Year 3
+                    </label>
+                    <label>
+                        <input type="checkbox" name="year" value="year4" id="year4" class="sort"/>
+                        Year 4
+                </label>
+                </div>
+
+            </div>
         </div>
         <div id="whatfilters"></div>
         <ul class="nav nav-tabs">
@@ -222,7 +232,8 @@ u'Fri': [
                                                     {% if courseDict["course_acr"] in COURSE_DICT %}
                                                         <p class="course_name">{{ (COURSE_DICT[courseDict["course_acr"]])['course'] }}</p>
                                                         <!--<p>Year: {{ courseDict["course_year"] }}</p>-->
-                                                        <p>{{ matchVenue(courseDict["course_details"]) }}</p>
+                                                        <p class="course_location">{{ matchVenue(courseDict["course_details"]) }}</p>
+{#                                                        <p>{{ courseDict["course_details"] }}</p>#}
 
                                                     {% endif %}
                                                 </div>
@@ -350,14 +361,15 @@ u'Fri': [
 
                                                             <div class="modal-body">
                                                                 {% if courseDict["course_acr"] in COURSE_DICT %}
-                                                                    <div class="course-details">
-                                                                        <div class="col-md-4 row course-details-container">
+                                                                    <div class="course-details-wrapper">
+                                                                        <div class="col-sm-6 row course-details-container">
+                                                                        <div class="row">
                                                                             <a target="_blank"
                                                                                href="{% if courseDict['course_acr'] in COURSE_DICT %}
                                                                                                             {{ (COURSE_DICT[courseDict['course_acr']])['course_url'] }}
                                                                                                             {% endif %}
                                                                                                             ">
-                                                                                <div class="course-details well well-sm modal-well col-sm-4">
+                                                                                <div class="course-details well well-sm modal-well">
                                                                                     <p class="big-icon homepage-icon"><span
                                                                                             class="glyphicon glyphicon-home"></span>
                                                                                     </p>
@@ -365,29 +377,39 @@ u'Fri': [
                                                                                         HOMEPAGE</p>
                                                                                 </div>
                                                                             </a>
-                                                                            <div class="course-details well well-sm modal-well col-sm-4">
+                                                                            <div class="course-details well well-sm modal-well">
                                                                                 <p class="big-icon">{{ COURSE_DICT[courseDict["course_acr"]]['year'] }}</p>
                                                                                 <p>YEAR</p>
                                                                             </div>
-                                                                            <div class="course-details well well-sm modal-well col-sm-4">
+                                                                            <div class="course-details well well-sm modal-well">
                                                                                 <p class="big-icon">{{ COURSE_DICT[courseDict["course_acr"]]['credits'] }}</p>
                                                                                 <p>CREDITS</p>
                                                                             </div>
+                                                                        </div>
+                                                                        <div class="row">
                                                                             <a target="_blank"
                                                                                href="{% if courseDict['course_acr'] in COURSE_DICT %}
                                                                                                             {{ (COURSE_DICT[courseDict['course_acr']])['drps'] }}
                                                                                                             {% endif %}
                                                                                                             ">
-                                                                                <div class="course-details well well-sm modal-well col-sm-4">
+                                                                                <div class="course-details well well-sm modal-well">
                                                                                     <p class="big-icon homepage-icon"><span
                                                                                             class="glyphicon glyphicon-home"></span>
                                                                                     </p>
                                                                                     <p class="homepage-text">DRPS</p>
                                                                                 </div>
                                                                             </a>
-
+                                                                            <div class="course-details well well-sm modal-well">
+                                                                                <p class="big-icon">{{ COURSE_DICT[courseDict["course_acr"]]['semester'] }}</p>
+                                                                                <p class="homepage-text">SEMESTER</p>
+                                                                            </div>
+                                                                            <div class="course-details well well-sm modal-well">
+                                                                                <p class="big-icon">{{ COURSE_DICT[courseDict["course_acr"]]['level'] }}</p>
+                                                                                <p class="homepage-text">LEVEL</p>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-md-4">
+                                                                        </div>
+                                                                        <div class="col-sm-4">
                                                                             <p><span
                                                                                     class="glyphicon glyphicon-time"></span> {{ day }}, {{ TIMES_LIST[loop.index] }}
                                                                             </p>
