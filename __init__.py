@@ -13,6 +13,7 @@ CONTENT_DICT = Get_content_dict()
 VENUE_DICT = Get_venue_dict()
 ALTERNATE_VENUE_DICT = Get_alternate_venue_dict()
 UOE_VENUE_DATA = Get_UOE_venue_data()
+ROOM_DICTIONARY = Get_room_dictionary()
 
 
 print VENUE_DICT
@@ -107,6 +108,11 @@ def utility_processor():
 
         return itemInDict
 
+    def matchRoom(room, roomDictionary=ROOM_DICTIONARY):
+        if room in roomDictionary.keys():
+            return roomDictionary[room]
+        else:
+            return room
     # def Get_venue_address(venue_acr, venue_dict=VENUE_DICT):
     #     venue_url = venue_dict[venue_acr]["venue_url"]
     #     if venue_url:
@@ -128,7 +134,8 @@ def utility_processor():
                 similar=similar,
                 mostSimilar=mostSimilar,
                 matchNameInJsonToLongLat=matchNameInJsonToLongLat,
-                matchNameInJsonToDict=matchNameInJsonToDict)#, Get_venue_address=Get_venue_address)
+                matchNameInJsonToDict=matchNameInJsonToDict,
+                matchRoom=matchRoom)#, Get_venue_address=Get_venue_address)
 
 
 
@@ -142,7 +149,8 @@ def homepage():
     CONTENT_DICT = CONTENT_DICT,
     VENUE_DICT = VENUE_DICT,
     ALTERNATE_VENUE_DICT = ALTERNATE_VENUE_DICT,
-    UOE_VENUE_DATA = UOE_VENUE_DATA)
+    UOE_VENUE_DATA = UOE_VENUE_DATA,
+    ROOM_DICTIONARY = ROOM_DICTIONARY)
 
 
 if __name__ == "__main__":

@@ -89,3 +89,43 @@ $(function () {
         return arr;
     }
 });
+
+$( document ).ready( function(){
+    //$("#semester2").hide();
+
+    var checkboxes = $( ':checkbox' );
+
+    // Check all checkboxes
+    checkboxes.prop( 'checked', true );
+
+});
+
+var pinnedCourses = [];
+
+
+
+// $("#showPinnedCoursesButton").click(function() {
+//
+//     $.each($('.course-box'), function( index, value ) {
+//       alert( index + ": " + value );
+//     });
+//     $.each([ 52, 97 ], function( index, value ) {
+//       alert( index + ": " + value );
+//     });
+//
+//     $('.course-box').each(function(i, obj) {
+//         $(this).hide();
+//     });
+//     pinnedCourses.each(function (item) {
+//         item.show()
+//     })
+// });
+//
+
+
+// function showPinnedCourses() {
+//  pinnedCourses.forEach(function (item) {
+//      item.hide()
+//  })
+// };
+//

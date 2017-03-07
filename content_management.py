@@ -92,9 +92,27 @@ def Get_alternate_venue_dict():
 
                                                      }
                     }
-    print ALTERNATE_VENUE_DICT
     return ALTERNATE_VENUE_DICT
 
+
+def Get_room_dictionary():
+    ROOM_DICTIONARY = {
+                         'LT1': 'Lecture Theatre 1',
+                         'LT2': 'Lecture Theatre 2',
+                         'LT3': 'Lecture Theatre 3',
+                         'LT4': 'Lecture Theatre 4',
+                         'LT5': 'Lecture Theatre 5',
+                         'LHA': 'Lecture Hall A',
+                         'LHB': 'Lecture Hall B',
+                         'LHC': 'Lecture Hall C',
+                         'SR1': 'Seminar Room 1 (B.152)',
+                         'SR2': 'Seminar Room 2 (B.153)',
+                         'SR3': 'Seminar Room 3 (B.154)',
+                         'GSQ LT': 'George Square Lecture Theatre',
+                         'RM 425 Anatomy LT': 'Doorway 3, Anatomy Lecture Theatre (1.425)',
+                         'Teviot LT': 'Doorway 4, Meadows Lecture Theatre (G.07)'
+    }
+    return ROOM_DICTIONARY
 
 def Get_UOE_venue_data():
     soup = BeautifulSoup(urllib.urlopen("http://webproxy.is.ed.ac.uk/web-proxy/maps_edweb/data.php"))

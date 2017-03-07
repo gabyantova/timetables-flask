@@ -120,7 +120,7 @@ u'Fri': [
             <div id="logo-and-title" class="col-md-6">
                 <img id="logo"
                  src="https://upload.wikimedia.org/wikipedia/en/c/ca/University_of_Edinburgh_School_of_Informatics_logo.jpg">
-                <h2>Lecture Timetable 2016-2017</h2>
+{#                <h2>Lecture Timetable 2016-2017</h2>#}
             </div>
             <div id="select" class="tags col-md-6">
 
@@ -170,14 +170,43 @@ u'Fri': [
                 </label>
                 </div>
 
+                <button id="showPinnedCoursesButton" type="button" class="btn btn-primary btn-lg">
+                    Show my courses
+                </button>
+                <button id="restoreAllCoursesButton" type="button" class="btn btn-primary btn-lg">
+                    Restore all courses
+                </button>
+
+                <script>
+
+                    $("#restoreAllCoursesButton").click(function() {
+                        $.each($('.course-box'), function (i, boxItem) {
+                            $(this).show();
+                        });
+                    });
+
+                    $("#showPinnedCoursesButton").click(function() {
+                        $.each($('.course-box'), function (i, boxItem) {
+                            // Check if pinnedCourses does not contain this course
+                            if (pinnedCourses.indexOf($(this).attr("acr")) == -1) {
+                                if ($(this).attr("semester") == currentSemester){
+                                    $(this).hide();
+                                }
+                            };
+
+                        });
+                    });
+                </script>
+
             </div>
         </div>
         <div id="whatfilters"></div>
         <ul class="nav nav-tabs">
             <li class="active">
-                <a href="#0" data-toggle="tab">Semester 1</a>
+                <a href="#semester1-table" semester="1" class="semester-tab" id="semester1-tab" data-toggle="tab">Semester 1</a>
             </li>
-            <li><a href="#1" data-toggle="tab">Semester 2</a>
+            <li>
+                <a href="#semester2-table" semester="2" class="semester-tab" id="semester2-tab" data-toggle="tab">Semester 2</a>
             </li>
         </ul>
 
@@ -186,25 +215,24 @@ u'Fri': [
             <tr>
                 <th></th>
                 {% for time in TIMES_LIST %}
-                    <th>{{ time }}</th>
+                    <th class="hour-header">{{ time }}</th>
                 {% endfor %}
             </tr>
             </thead>
         </table>
     </div>
 
+<script>
+
+</script>
 
     <div class="container">
 
         <div class="tab-content" id="result">
             <div role="tabpanel" class="tab-pane fade in active" id="basics">
-
-
-                <!--<div id='map-one' class='map'> </div>-->
-                <!--<div id='map-one' class='map'> </div>-->
             </div>
-            {% for x in range(2) %}
-                <div class="semester tab-pane active" id="{{ x }}">
+            {% for semesterNumber in range(1,3) %}
+                <div class="semester tab-pane active" id="semester{{ semesterNumber }}-table">
                     <table class="table">
                         <tbody>
 
@@ -214,67 +242,126 @@ u'Fri': [
                                 <td><p class="dayOfTheWeek">{{ day }}</p></td>
 
                                 {% set timeCounter = 0 %}
-                                {% for hourSlot in CONTENT_DICT[x][day[0:3]] %}
-
+                                {% for hourSlot in CONTENT_DICT[semesterNumber-1][day[0:3]] %}
+                                    {% set timeLoopIndex = loop.index-1 %}
                                     <div>
                                         <td>
                                             {% for courseDict in hourSlot %}
 
 
+
+                                                <style>
+
+                                                    .{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string }}-title_bar_icon{
+                                                        visibility: hidden;
+                                                    }
+
+                                                    #{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-well:hover .{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4]  + "-semester" + semesterNumber|string}}-title_bar_icon {
+                                                        visibility: visible;
+                                                    }
+                                                </style>
+
                                                 {#{% if courseDict['course_acr'] in COURSE_DICT %}{{ COURSE_DICT[courseDict['course_acr']]['year'] }}{% if COURSE_DICT[courseDict['course_acr']]['types'] is defined %}{% for type in COURSE_DICT[courseDict['course_acr']]['types'] %}{{ type }}{% else %}{{ 'unclassified' }}{% endfor %}{% endif %}{% endif %}#}
 
 {#                                                <div data-category="year{% if courseDict['course_acr'] in COURSE_DICT %}{{ COURSE_DICT[courseDict['course_acr']]['year'] }} {% for type in COURSE_DICT[courseDict['course_acr']]['types'] %}  {% if type not in COURSE_DICT[courseDict['course_acr']]['types'] %}#}
                                                 <div data-category="year{% if courseDict['course_acr'] in COURSE_DICT %}{{ COURSE_DICT[courseDict['course_acr']]['year'] }} {% if COURSE_DICT[courseDict['course_acr']]['types'] is defined %} {% for type in COURSE_DICT[courseDict['course_acr']]['types'] %} {{ type }} {% else %} {{ 'unclassified' }} {% endfor %}{% endif %}{% endif %} "
-                                                     class="well well-sm pointer course-box subject"
+                                                     class="{{ TIMES_LIST[timeLoopIndex][0:4]  + "-semester" + semesterNumber|string}} well well-sm pointer course-box subject {{ courseDict['course_acr'] }}"
+                                                     id="{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4]  + "-semester" + semesterNumber|string}}-well"
+                                                     acr="{{ courseDict['course_acr'] }}"
+                                                     semester="{{ semesterNumber }}"
                                                      data-toggle="modal"
-                                                     data-target="#{{ courseDict['course_acr'] + '-' + day }}-modal">
-                                                    <p class="course_acr"><b>{{ courseDict["course_acr"] }}</b></p>
+                                                     data-target="#{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-modal">
+                                                    <div class="course_title_bar">
+                                                        <i id="{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-pin" class="fa fa-thumb-tack title_bar_icon pin {{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-title_bar_icon" aria-hidden="true"></i>
+                                                        <span class="course_acr"><b>{{ courseDict["course_acr"] }}</b></span>
+                                                        <i id="{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-x" class="fa fa-times title_bar_icon x {{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-title_bar_icon" aria-hidden="true"></i>
+                                                    </div>
                                                     {% if courseDict["course_acr"] in COURSE_DICT %}
                                                         <p class="course_name">{{ (COURSE_DICT[courseDict["course_acr"]])['course'] }}</p>
-                                                        <!--<p>Year: {{ courseDict["course_year"] }}</p>-->
                                                         <p class="course_location">{{ matchVenue(courseDict["course_details"]) }}</p>
-{#                                                        <p>{{ courseDict["course_details"] }}</p>#}
-
                                                     {% endif %}
                                                 </div>
 
+                                                <script>
 
-                                                <!-- Modal -->
+                                                // WHEN CLICKING ON THE X BUTTON
+                                                $("#{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-x").click(function(){
+                                                    $("#{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-well").hide();
+                                                    pinnedCourses.splice(pinnedCourses.indexOf("{{ courseDict['course_acr'] }}"), 1);
+
+
+                                                    $("div[acr={{ courseDict['course_acr'] }}]").each(function() {
+                                                        if ($(this).attr('id') != "{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-well"){
+                                                            $(this).removeClass("pinned");
+                                                            $(this).hide();
+                                                        }
+                                                    });
+
+                                                });
+
+
+                                                // WHEN CLICKING ON THE PIN BUTTON
+                                                $("#{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-pin").click(function(){
+
+                                                    // Check if pinnedCourses contains this course
+                                                    // If it does. remove it from the list
+                                                    if (pinnedCourses.indexOf("{{ courseDict['course_acr'] }}") > -1) {
+                                                        pinnedCourses.splice(pinnedCourses.indexOf("{{ courseDict['course_acr'] }}"), 1)
+                                                    }
+                                                    // Otherwise, add it to the list
+                                                    else {
+                                                        pinnedCourses.push("{{ courseDict['course_acr'] }}")
+                                                    }
+
+                                                    $("div[acr={{ courseDict['course_acr'] }}]").each(function() {
+                                                        $(this).toggleClass("pinned");
+                                                    });
+                                                });
+
+                                                </script>
+
+
+
+
+
+
+
+
+                                                <!-- MODAL -->
 
                                                 <div class="modal fade"
-                                                     id="{{ courseDict['course_acr'] + '-' + day }}-modal"
+                                                     id="{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + '-semester' + semesterNumber|string}}-modal"
                                                      tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 
                                                     <script>
 
 
-                                                        var {{courseDict["course_acr"]+day}}Coordinates = {{ matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"]))) }};
-                                                        {#                                                    alert({{courseDict["course_acr"]+day}}Coordinates)#}
+                                                        var {{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Coordinates = {{ matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict['course_details']))) }};
 
-                                                        $('#{{  courseDict["course_acr"] + "-" + day  }}-modal').on('shown.bs.modal', function () {
+                                                        $("#{{  courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + '-semester' + semesterNumber|string}}-modal").on('shown.bs.modal', function () {
 
-                                                            var {{  courseDict["course_acr"] + day  }}Map = new mapboxgl.Map({
-                                                                container: '{{  courseDict["course_acr"] + "-" + day  }}-map',
+                                                            var {{  courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Map = new mapboxgl.Map({
+                                                                container: "{{  courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + '-semester' + semesterNumber|string}}-map",
                                                                 style: 'mapbox://styles/mapbox/streets-v9',
                                                                 zoom: 16,
-                                                                center: {{ courseDict["course_acr"] + day }}Coordinates
+                                                                center: {{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Coordinates
                                                             });
 
 
-                                                            var {{courseDict["course_acr"] + day}}Directions = new MapboxDirections({
+                                                            var {{courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Directions = new MapboxDirections({
                                                                 accessToken: mapboxgl.accessToken,
                                                                 profile: 'mapbox.walking',
                                                                 unit: 'metric'
                                                             });
 
-                                                            {{courseDict["course_acr"] + day}}Map.addControl({{courseDict["course_acr"] + day}}Directions, 'top-left');
-                                                            {{courseDict["course_acr"] + day}}Directions.setDestination({{ courseDict["course_acr"] + day }}Coordinates)
+                                                            {{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Map.addControl({{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Directions, 'top-left');
+                                                            {{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Directions.setDestination({{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Coordinates);
 
 
                                                             // Markers
-                                                            {{  courseDict["course_acr"] + day  }}Map.on('load', function () {
+                                                            {{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Map.on('load', function () {
 
-                                                                {{  courseDict["course_acr"] + day  }}Map.addSource("markers", {
+                                                                {{  courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Map.addSource("markers", {
                                                                     "type": "geojson",
                                                                     "data": {
                                                                         "type": "FeatureCollection",
@@ -292,7 +379,7 @@ u'Fri': [
                                                                     }
                                                                 });
 
-                                                                {{  courseDict["course_acr"] + day  }}Map.addLayer({
+                                                                {{  courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Map.addLayer({
                                                                     "id": "markers",
                                                                     "source": "markers",
                                                                     "type": "circle",
@@ -301,39 +388,6 @@ u'Fri': [
                                                                         "circle-color": "#007cbf"
                                                                     }
                                                                 });
-
-                                                                {#                                                            {{  courseDict["course_acr"] + day  }}Map.addLayer({#}
-                                                                {#                                                                "id": "markers",#}
-                                                                {#                                                                "type": "symbol",#}
-                                                                {#                                                                "source": {#}
-                                                                {#                                                                    "type": "geojson",#}
-                                                                {#                                                                    "data": {#}
-                                                                {#                                                                        "type": "FeatureCollection",#}
-                                                                {#                                                                        "features": [{#}
-                                                                {#                                                                            "type": "Feature",#}
-                                                                {#                                                                            "geometry": {#}
-                                                                {#                                                                                "type": "Point",#}
-                                                                {#                                                                                "coordinates": {{ courseDict["course_acr"] + day }}Coordinates#}
-                                                                {#                                                                                "coordinates": {{ matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"]))) }} {#{{ courseDict["course_acr"] + day }}Coordinates#}
-                                                                {#                                                                            },#}
-                                                                {#                                                                            "properties": {#}
-                                                                {#                                                                                "title": "Help Me",#}
-                                                                {#                                                                                "icon": "marker"#}
-                                                                {#                                                                                "marker-symbol": "default_marker"#}
-                                                                {#                                                                            }#}
-                                                                {#                                                                        }]#}
-                                                                {#                                                                    }#}
-                                                                {#                                                                },#}
-                                                                {#                                                                "layout": {#}
-                                                                {#                                                                    "icon-image": "{icon}-15",#}
-                                                                {#                                                                    "text-field": "{title}",#}
-                                                                {#                                                                    "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],#}
-                                                                {#                                                                    "text-offset": [0, 0.6],#}
-                                                                {#                                                                    "text-anchor": "top"#}
-                                                                {#                                                                }#}
-                                                                {#                                                            });#}
-
-
                                                             })
                                                             ;
 
@@ -411,11 +465,11 @@ u'Fri': [
                                                                         </div>
                                                                         <div class="col-sm-4">
                                                                             <p><span
-                                                                                    class="glyphicon glyphicon-time"></span> {{ day }}, {{ TIMES_LIST[loop.index] }}
+                                                                                    class="glyphicon glyphicon-time"></span> {{ day }}, {{ TIMES_LIST[timeLoopIndex] }}
                                                                             </p>
                                                                             <p>
                                                                                 <img id="door" src="{{ url_for('static', filename='img/door.svg') }}">
-                                                                                 {{ courseDict["course_room"] }}
+                                                                                 {{ matchRoom(courseDict["course_room"]) }}
                                                                             </p>
                                                                             <p><i class="fa fa-bank"></i> {{ mostSimilar(UOE_VENUE_DATA,
                                                             matchVenue(courseDict["course_details"])) }}</p>
@@ -429,7 +483,7 @@ u'Fri': [
                                                                             </p>
                                                                         </div>
                                                                     </div>
-                                                                    <div id="{{ courseDict['course_acr'] + '-' + day }}-map"
+                                                                    <div id="{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + '-semester' + semesterNumber|string}}-map"
                                                                          class='map'></div>
                                                                 {% endif %}
                                                                 <!--<a target="_blank" href="
@@ -473,5 +527,54 @@ u'Fri': [
 
 
 </div>
+
+
+<script>
+
+var currentSemester = "1";
+$(".semester-tab").click(function(){
+    currentSemester = $(this).attr("semester");
+    alert(currentSemester);
+});
+
+
+
+// Prevent from modal opening when a pin or an X is clicked
+$('.title_bar_icon').on('click', function(e) {
+   e.stopPropagation();
+});
+
+
+(function () {
+	var headertext = [];
+	var headers = document.querySelectorAll("thead");
+	var tablebody = document.querySelectorAll("tbody");
+
+	for(var i = 0; i < headers.length; i++) {
+		headertext[i]=[];
+		for (var j = 0, headrow; headrow = headers[i].rows[0].cells[j]; j++) {
+		  var current = headrow;
+		  headertext[i].push(current.textContent.replace(/\r?\n|\r/,""));
+		  }
+	}
+
+	if (headers.length > 0) {
+		for (var h = 0, tbody; tbody = tablebody[h]; h++) {
+			for (var i = 0, row; row = tbody.rows[i]; i++) {
+			  for (var j = 0, col; col = row.cells[j]; j++) {
+			    col.setAttribute("data-th", headertext[h][j]);
+			  }
+			}
+		}
+	}
+} ());
+
+
+
+
+
+</script>
+
+
 </body>
 </html>
