@@ -1,3 +1,7 @@
+// DECLARING GLOBAL VARIABLES
+var pinnedCourses = [];
+
+
 $(function () {
 
     var bySubject = [], byYear = [], byLocation = [];
@@ -91,16 +95,13 @@ $(function () {
 });
 
 $( document ).ready( function(){
-    //$("#semester2").hide();
-
+    $("#semester1-table").addClass("active");
     var checkboxes = $( ':checkbox' );
 
     // Check all checkboxes
     checkboxes.prop( 'checked', true );
 
 });
-
-var pinnedCourses = [];
 
 
 

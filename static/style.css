@@ -180,6 +180,13 @@ body {
 }
 
 @media screen and (max-width: 1000px) {
+    canvas{
+        position: inherit !important;
+    }
+    .mapboxgl-canvas-container{
+        position: inherit !important;
+    }
+
     table {
         width: 100%;
     }

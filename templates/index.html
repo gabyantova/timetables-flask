@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
 
 
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.js'></script>
@@ -16,14 +17,18 @@
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script src="{{ url_for('static', filename='jquery.sticky-kit.min.js') }}"></script>
+    <script src ="{{ url_for('static', filename='jquery.cookie.js') }}"></script>
+
 
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v3.0.3/mapbox-gl-directions.js'></script>
+
     <link rel='stylesheet'
           href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v3.0.3/mapbox-gl-directions.css'
           type='text/css'/>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
     <script>
 
@@ -31,19 +36,9 @@
         mapboxgl.accessToken = 'pk.eyJ1IjoiZ2FieWFudG92YSIsImEiOiJjaXlhNXRsOW8wMDIyMzNxcDdxdTk3dGcwIn0.gNNtUvGPe9zNblVthu__Yg';
 
         $(document).ready(function () {
-
             $(".dayOfTheWeek").stick_in_parent({
                 offset_top: 155
             });
-
-
-            $('.modal').on('shown.bs.modal', function () {
-
-                //map.invalidateSize();
-                //map.resize();
-            });
-
-
         });
 
         $(window).on("scroll touchmove", function () {
@@ -55,7 +50,7 @@
         var $chkbxFilter_tags = ['AI', 'CG', 'CS', 'SE', 'unclassified'];
 
         // Entry the block element that will be filtered below.
-        var $chkbxFilter_blocks = ['.course-box']
+        var $chkbxFilter_blocks = ['.course-box'];
 
     </script>
 
@@ -123,12 +118,6 @@ u'Fri': [
 {#                <h2>Lecture Timetable 2016-2017</h2>#}
             </div>
             <div id="select" class="tags col-md-6">
-
-    {#            <label class="selected">#}
-    {#                <input type="radio" id="all">#}
-    {#                ALL#}
-    {#            </label>#}
-
                 <div id="subject-sorting" class="">
                     <label for="AI">
                         <input type="checkbox" name="subject" value="AI" id="AI" class="sort"/>
@@ -171,13 +160,35 @@ u'Fri': [
                 </div>
 
                 <button id="showPinnedCoursesButton" type="button" class="btn btn-primary btn-lg">
-                    Show my courses
+                    Show pinned courses
                 </button>
                 <button id="restoreAllCoursesButton" type="button" class="btn btn-primary btn-lg">
                     Restore all courses
                 </button>
+                <button id="restoreAndRemoveAllPins" type="button" class="btn btn-primary btn-lg">
+                    Restore all courses and remove pins
+                </button>
 
                 <script>
+
+                    $("#showPinnedCoursesButton").click(function() {
+                        if (pinnedCourses.length == 0){
+                            alert("No courses are currently pinned.\n To pin a course, hover over it and click the pin icon next to its name.");
+                        }
+                        else{
+                            $.each($('.course-box'), function (i, boxItem) {
+                                // Check if pinnedCourses does not contain this course
+                                if (pinnedCourses.indexOf($(this).attr("acr")) == -1) {
+                                    if ($(this).attr("semester") == currentSemester){
+                                        $(this).hide();
+                                    }
+                                };
+
+                            });
+                        }
+
+
+                    });
 
                     $("#restoreAllCoursesButton").click(function() {
                         $.each($('.course-box'), function (i, boxItem) {
@@ -185,16 +196,15 @@ u'Fri': [
                         });
                     });
 
-                    $("#showPinnedCoursesButton").click(function() {
-                        $.each($('.course-box'), function (i, boxItem) {
-                            // Check if pinnedCourses does not contain this course
-                            if (pinnedCourses.indexOf($(this).attr("acr")) == -1) {
-                                if ($(this).attr("semester") == currentSemester){
-                                    $(this).hide();
-                                }
-                            };
 
+
+                    $("#restoreAndRemoveAllPins").click(function() {
+                        pinnedCourses = [];
+                        $.each($('.course-box'), function (i, boxItem) {
+                            $(this).removeClass("pinned");
+                            $(this).show();
                         });
+                        alert(pinnedCourses);
                     });
                 </script>
 
@@ -202,10 +212,10 @@ u'Fri': [
         </div>
         <div id="whatfilters"></div>
         <ul class="nav nav-tabs">
-            <li class="active">
+            <li id="semester1-li" class="active">
                 <a href="#semester1-table" semester="1" class="semester-tab" id="semester1-tab" data-toggle="tab">Semester 1</a>
             </li>
-            <li>
+            <li id="semester2-li">
                 <a href="#semester2-table" semester="2" class="semester-tab" id="semester2-tab" data-toggle="tab">Semester 2</a>
             </li>
         </ul>
@@ -232,7 +242,7 @@ u'Fri': [
             <div role="tabpanel" class="tab-pane fade in active" id="basics">
             </div>
             {% for semesterNumber in range(1,3) %}
-                <div class="semester tab-pane active" id="semester{{ semesterNumber }}-table">
+                <div class="semester tab-pane" id="semester{{ semesterNumber }}-table">
                     <table class="table">
                         <tbody>
 
@@ -265,7 +275,7 @@ u'Fri': [
 
 {#                                                <div data-category="year{% if courseDict['course_acr'] in COURSE_DICT %}{{ COURSE_DICT[courseDict['course_acr']]['year'] }} {% for type in COURSE_DICT[courseDict['course_acr']]['types'] %}  {% if type not in COURSE_DICT[courseDict['course_acr']]['types'] %}#}
                                                 <div data-category="year{% if courseDict['course_acr'] in COURSE_DICT %}{{ COURSE_DICT[courseDict['course_acr']]['year'] }} {% if COURSE_DICT[courseDict['course_acr']]['types'] is defined %} {% for type in COURSE_DICT[courseDict['course_acr']]['types'] %} {{ type }} {% else %} {{ 'unclassified' }} {% endfor %}{% endif %}{% endif %} "
-                                                     class="{{ TIMES_LIST[timeLoopIndex][0:4]  + "-semester" + semesterNumber|string}} well well-sm pointer course-box subject {{ courseDict['course_acr'] }}"
+                                                     class="well well-sm pointer course-box subject {{ courseDict['course_acr'] }}"
                                                      id="{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4]  + "-semester" + semesterNumber|string}}-well"
                                                      acr="{{ courseDict['course_acr'] }}"
                                                      semester="{{ semesterNumber }}"
@@ -281,49 +291,6 @@ u'Fri': [
                                                         <p class="course_location">{{ matchVenue(courseDict["course_details"]) }}</p>
                                                     {% endif %}
                                                 </div>
-
-                                                <script>
-
-                                                // WHEN CLICKING ON THE X BUTTON
-                                                $("#{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-x").click(function(){
-                                                    $("#{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-well").hide();
-                                                    pinnedCourses.splice(pinnedCourses.indexOf("{{ courseDict['course_acr'] }}"), 1);
-
-
-                                                    $("div[acr={{ courseDict['course_acr'] }}]").each(function() {
-                                                        if ($(this).attr('id') != "{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-well"){
-                                                            $(this).removeClass("pinned");
-                                                            $(this).hide();
-                                                        }
-                                                    });
-
-                                                });
-
-
-                                                // WHEN CLICKING ON THE PIN BUTTON
-                                                $("#{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-pin").click(function(){
-
-                                                    // Check if pinnedCourses contains this course
-                                                    // If it does. remove it from the list
-                                                    if (pinnedCourses.indexOf("{{ courseDict['course_acr'] }}") > -1) {
-                                                        pinnedCourses.splice(pinnedCourses.indexOf("{{ courseDict['course_acr'] }}"), 1)
-                                                    }
-                                                    // Otherwise, add it to the list
-                                                    else {
-                                                        pinnedCourses.push("{{ courseDict['course_acr'] }}")
-                                                    }
-
-                                                    $("div[acr={{ courseDict['course_acr'] }}]").each(function() {
-                                                        $(this).toggleClass("pinned");
-                                                    });
-                                                });
-
-                                                </script>
-
-
-
-
-
 
 
 
@@ -358,7 +325,7 @@ u'Fri': [
                                                             {{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Directions.setDestination({{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Coordinates);
 
 
-                                                            // Markers
+                                                            // MARKERS
                                                             {{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Map.on('load', function () {
 
                                                                 {{  courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Map.addSource("markers", {
@@ -499,7 +466,6 @@ u'Fri': [
                                                                         data-dismiss="modal">
                                                                     Close
                                                                 </button>
-                                                                <!--<button type="button" class="btn btn-primary">Save changes</button>-->
                                                             </div>
                                                         </div>
                                                     </div>
@@ -531,12 +497,59 @@ u'Fri': [
 
 <script>
 
+$(".x").click(function(){
+
+    // Retrieve the acronym of clicked course
+    var clickedXAcr = $(this).closest(".course-box").attr("acr");
+
+    // If pinnedCourses contains the acronym of clicked box
+    if (pinnedCourses.indexOf(clickedXAcr) > -1) {
+        // Remove clicked course from pinnedCourses array
+        pinnedCourses.splice(pinnedCourses.indexOf(clickedXAcr), 1);
+    }
+
+    // Remove pinned class and hide each coursebox with same acronym
+    $("div[acr=" + clickedXAcr + "]").each(function() {
+            $(this).removeClass("pinned");
+            $(this).hide();
+    });
+
+    alert(pinnedCourses);
+});
+
+
+$(".pin").click(function(){
+
+    // Retrieve the acronym of clicked course
+    var clickedPinAcr = $(this).closest(".course-box").attr("acr");
+
+    // Check if pinnedCourses contains this course
+    // If it does, remove it from the list
+    if (pinnedCourses.indexOf(clickedPinAcr) > -1) {
+        pinnedCourses.splice(pinnedCourses.indexOf(clickedPinAcr), 1);
+    }
+    // Otherwise, add it to the list
+    else {
+        pinnedCourses.push(clickedPinAcr);
+    }
+
+    // Add the 'pinned' class to each coursebox with same acronym
+    $("div[acr=" + clickedPinAcr + "]").each(function() {
+        $(this).toggleClass("pinned");
+    });
+
+    alert(pinnedCourses);
+    //$.cookie("pinnedCoursesCookie", pinnedCourses);
+    //console.debug($.cookie("pinnedCoursesCookie"));
+    //alert($.cookie("pinnedCoursesCookie"));
+});
+
+
+
 var currentSemester = "1";
 $(".semester-tab").click(function(){
     currentSemester = $(this).attr("semester");
-    alert(currentSemester);
 });
-
 
 
 // Prevent from modal opening when a pin or an X is clicked
