@@ -11,7 +11,7 @@ def Weekdays():
 
 def Get_url():
     now = datetime.datetime.now()
-    if now.month < 8:
+    if now.month < 9:
         ac_year_start = now.year % 100 - 1
     else:
         ac_year_start = now.year % 100
@@ -63,13 +63,9 @@ def Get_venue_dict():
     VENUE_DICT = {}
     url_venue = "http://web.inf.ed.ac.uk/infweb/student-services/ito/admin/venue-codes"
     soup_venue = BeautifulSoup(urllib.urlopen(url_venue).read())
-    # course_table = soup_venue.table.tbody.find_all("tr")
-
     building_and_room_codes = soup_venue.find("section", {"id": "block-system-main"}).find_all("ul")
-
     building_codes = building_and_room_codes[0].find_all("li")
     # room_codes = building_and_room_codes[1].find_all("li")
-
 
     for building_code in building_codes:
         VENUE_DICT[building_code.find("strong").get_text().replace(" ", "")] = {
@@ -88,9 +84,7 @@ def Get_alternate_venue_dict():
                         'Informatics Forum':         {'venue_url': 'http://www.ed.ac.uk/maps/maps?building=informatics-forum',
                                                       'venue_name': 'Informatics Forum'},
                         '21BP':                      {'venue_url': '',
-                                                      'venue_name': '21 Buccleuch Place'
-
-                                                     }
+                                                      'venue_name': '21 Buccleuch Place'}
                     }
     return ALTERNATE_VENUE_DICT
 
@@ -105,12 +99,15 @@ def Get_room_dictionary():
                          'LHA': 'Lecture Hall A',
                          'LHB': 'Lecture Hall B',
                          'LHC': 'Lecture Hall C',
-                         'SR1': 'Seminar Room 1 (B.152)',
-                         'SR2': 'Seminar Room 2 (B.153)',
-                         'SR3': 'Seminar Room 3 (B.154)',
+                         'SR1': 'Seminar Room 1',
+                         'SR2': 'Seminar Room 2',
+                         'SR3': 'Seminar Room 3',
                          'GSQ LT': 'George Square Lecture Theatre',
-                         'RM 425 Anatomy LT': 'Doorway 3, Anatomy Lecture Theatre (1.425)',
-                         'Teviot LT': 'Doorway 4, Meadows Lecture Theatre (G.07)'
+                         'RM 425 Anatomy LT': 'Anatomy Lecture Theatre, Doorway 3,  (1.425)',
+                         'Teviot LT': 'Meadows Lecture Theatre, Doorway 4, (G.07)',
+                         'SSLT': 'Sydney Smith Lecture Theatre, Doorway 1, (2.520)',
+                         'HRB LT': 'H.R.B Lecture Theatre',
+                         'BLT LT': 'Basement Lecture Theatre'
     }
     return ROOM_DICTIONARY
 
@@ -118,13 +115,9 @@ def Get_UOE_venue_data():
     soup = BeautifulSoup(urllib.urlopen("http://webproxy.is.ed.ac.uk/web-proxy/maps_edweb/data.php"))
     content = soup.body.text
     var_list = content.split(";")
-    # var_list[0] = var_list[0].split("=")[1]
     var_list[1] = var_list[1].split("=")[1].strip()
-    # mapAreas = ast.literal_eval(var_list[0])
-
     pointsOfInterest = ast.literal_eval(var_list[1])
 
-    # print pointsOfInterest
     return pointsOfInterest
 
 
@@ -149,8 +142,6 @@ def Get_content_dict():
                     first = False
                 else:
                     courses_that_hour = row_item.find_all(["p", "div"])
-                    #courses_that_hour_div = row_item.find_all("div")
-                    #courses_that_hour = courses_that_hour_p + courses_that_hour_div
                     onlyOneCourseInTimeslot = False
                     if not (courses_that_hour):
                         courses_that_hour = [row_item]  # .find_all("td")
@@ -158,17 +149,17 @@ def Get_content_dict():
                     final_array_courses_that_hour = []
                     checkForCourseWithoutATag = True
                     for index, course_that_hour in enumerate(courses_that_hour):
+                        ## if it contains a year in square brackets
                         if re.search("\[[0-9]\]", course_that_hour.text):# and (course_that_hour.text).strip().split(']')[1]:
-                            array_course_that_hour = []
-                            dict_course_that_hour = {}
                             first_split = course_that_hour.text.split("[", 1)  # split on first square bracket
+                            acronym = first_split[0].strip();
                             second_split = first_split[1].split("]", 1)
-                            room = second_split[1].split(",")[0].strip()
-                            array_course_that_hour.append(first_split[0])
-                            array_course_that_hour.extend(second_split)
-                            dict_course_that_hour = {'course_acr': array_course_that_hour[0].strip(),
-                                                     'course_year': array_course_that_hour[1].strip(),
-                                                     'course_details': array_course_that_hour[2],
+                            year = first_split[1].split("]", 1)[0].strip()
+                            room = second_split[1].split(",", 1)[0].strip()
+                            details = second_split[1].strip()
+                            dict_course_that_hour = {'course_acr': acronym,
+                                                     'course_year': year,
+                                                     'course_details': details,
                                                      'course_room': room}
                             final_array_courses_that_hour.append(dict_course_that_hour)
                             ## if the course details have been separated to be in two <p> or <div> tags
