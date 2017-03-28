@@ -1,10 +1,9 @@
 from flask import Flask, render_template
 from content_management import *
+from fuzzywuzzy import fuzz, process
 
-from bs4 import BeautifulSoup
-import urllib
-import datetime
-from difflib import SequenceMatcher
+import sys
+print (sys.version)
 
 WEEKDAYS = Weekdays()
 URL = Get_url()
@@ -14,82 +13,34 @@ VENUE_DICT = Get_venue_dict()
 ALTERNATE_VENUE_DICT = Get_alternate_venue_dict()
 UOE_VENUE_DATA = Get_UOE_venue_data()
 ROOM_DICTIONARY = Get_room_dictionary()
-
-
-print VENUE_DICT
-soup = BeautifulSoup(urllib.urlopen(URL).read())
-times = soup.table.thead.tr.find_all("th")
-
-times = soup.table.thead.tr.find_all("th")
-times = times[1:]
-TIMES_LIST = []
-for time in times:
-    start_time = time.text[0:4]
-    end_time = time.text[-4:]
-    TIMES_LIST.append(start_time + " - " + end_time)
-
-
-contents = soup.table.tbody.find_all("tr")
+TIMES_LIST = Get_times_list()
 
 app = Flask(__name__)
 
 @app.context_processor
 def utility_processor():
-    def getVenueAcrFromDetails(course_details, venue_dict = VENUE_DICT):
-        course_details_split = course_details.split(",")
-
-        course_acr = ""
-
-        for item in course_details_split:
-            item_no_spaces = item.replace(" ", "")
-            for key in venue_dict.keys():
-
-                if key in item_no_spaces:
-                    return key
 
     def matchVenue(course_details, venue_dict=VENUE_DICT, alternate_venue_dict=ALTERNATE_VENUE_DICT):
 
-        course_details_split = course_details.split(",")
-
-        course_acr = ""
-
-        for item in course_details_split:
-            #item_no_spaces = item.replace(" ", "")
-            for key in venue_dict.keys():
-                if key in item.replace(" ", ""):
-                    return venue_dict[key]["venue_name"]
-
-        for item in course_details_split:
-            #item_no_spaces = item.replace(" ", "")
-            for key in alternate_venue_dict.keys():
-                if key in item: #.replace(" ", ""):
-                    return alternate_venue_dict[key]["venue_name"]
+        #if re.search("(wks|wk)", course_details, re.IGNORECASE):
 
 
-    def addressToUrl(address):
-        if address:
-            addressList = address.split(" ")
-            urlAddress = ""
-            for word in addressList:
-                urlAddress += word + "%20"
-            return urlAddress
+        for key in venue_dict.keys():
+            if key in course_details.replace(" ", ""):
+                return venue_dict[key]["venue_name"]
 
-    def similar(a, b):
-        return SequenceMatcher(None, a, b).ratio()
+        for key in alternate_venue_dict.keys():
+            if key in course_details:
+                return alternate_venue_dict[key]["venue_name"]
 
-
-    def mostSimilar(dict, stringToMatch):
-
-        mostSimilarString = ""
+    def mostSimilar(venueToMatch, dict=UOE_VENUE_DATA):
+        listOfVenues = []
         for item in dict:
-            if item.has_key('name') and stringToMatch:
-                if similar(item['name'], stringToMatch) > similar(mostSimilarString, stringToMatch):
-                    mostSimilarString = item['name']
+            if item.has_key("name"):
+                listOfVenues.append(item['name'])
+        return process.extractOne(venueToMatch, listOfVenues, scorer=fuzz.token_sort_ratio)[0]
 
-        return mostSimilarString
-
-    def matchNameInJsonToLongLat(dict, name):
-
+    def matchNameInJsonToLongLat(name, dict=UOE_VENUE_DATA):
         itemInDict = {}
 
         for item in dict:
@@ -99,7 +50,7 @@ def utility_processor():
         if itemInDict.has_key('longitude') and itemInDict.has_key('latitude'):
             return [float(itemInDict['longitude']), float(itemInDict['latitude'])]
 
-    def matchNameInJsonToDict(dict, name):
+    def matchNameInJsonToDict(name, dict=UOE_VENUE_DATA):
         itemInDict = {}
 
         for item in dict:
@@ -113,29 +64,12 @@ def utility_processor():
             return roomDictionary[room]
         else:
             return room
-    # def Get_venue_address(venue_acr, venue_dict=VENUE_DICT):
-    #     venue_url = venue_dict[venue_acr]["venue_url"]
-    #     if venue_url:
-    #         soup_venue = BeautifulSoup(urllib.urlopen(venue_url).read())
-    #         if soup_venue:
-    #             venue_address = soup_venue.find("div", {"id": "infobox"}).find("info").text
-    #             return venue_address
-    #     return ""
-    # def Get_venue_address(venue_acr, venue_dict):
-    #     print(venue_dict)
-    #     venue_url = venue_dict[venue_acr]["venue_url"]
-    #     soup_venue = BeautifulSoup(urllib.urlopen(venue_url).read())
-    #     venue_address = soup_venue.find("div", {"id": "infobox"}).find("info").text
-    #     return venue_address
 
     return dict(matchVenue=matchVenue,
-                getVenueAcrFromDetails=getVenueAcrFromDetails,
-                addressToUrl=addressToUrl,
-                similar=similar,
                 mostSimilar=mostSimilar,
                 matchNameInJsonToLongLat=matchNameInJsonToLongLat,
                 matchNameInJsonToDict=matchNameInJsonToDict,
-                matchRoom=matchRoom)#, Get_venue_address=Get_venue_address)
+                matchRoom=matchRoom)
 
 
 

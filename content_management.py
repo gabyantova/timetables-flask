@@ -18,6 +18,18 @@ def Get_url():
     return "http://web.inf.ed.ac.uk/infweb/student-services/ito/admin/timetables/lecture-timetable-20" + str(
         ac_year_start) + "-" + str(ac_year_start + 1)
 
+def Get_times_list():
+    url = Get_url()
+    soup = BeautifulSoup(urllib.urlopen(url).read())
+    times = soup.table.thead.tr.find_all("th")
+    times = times[1:]
+    TIMES_LIST = []
+    for time in times:
+        start_time = time.text[0:4]
+        end_time = time.text[-4:]
+        TIMES_LIST.append(start_time + " - " + end_time)
+    return TIMES_LIST
+
 
 def Get_course_dict():
     COURSE_DICT = {}

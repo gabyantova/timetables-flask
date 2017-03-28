@@ -255,43 +255,48 @@ u'Fri': [
                                 <td><p class="dayOfTheWeek">{{ day }}</p></td>
 
                                 {% set timeCounter = 0 %}
-                                {% for hourSlot in CONTENT_DICT[semesterNumber-1][day[0:3]] %}
+                                {% for timeSlot in CONTENT_DICT[semesterNumber-1][day[0:3]] %}
                                     {% set timeLoopIndex = loop.index-1 %}
                                     <div>
                                         <td>
-                                            {% for courseDict in hourSlot %}
+                                            {% for courseDict in timeSlot %}
+                                                {% set courseAcr = courseDict['course_acr'] %}
+                                                {% set courseAcrInCourseDict =  COURSE_DICT[courseAcr] %}
 
+                                                {% set courseId =  courseAcr + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + '-semester' + semesterNumber|string %}
+                                                {% set courseIdJS = courseAcr + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string %}
 
+                                                {% set venueFromDetails = matchVenue(courseDict['course_details']) %}
+                                                {% set mostSimilarVenueFromDetails = mostSimilar(venueFromDetails) %}
+                                                {% set venueToUOEJsonCoord = matchNameInJsonToLongLat(mostSimilarVenueFromDetails) %}
+                                                {% set venueToUOEJsonDict =  matchNameInJsonToDict(mostSimilarVenueFromDetails) %}
 
                                                 <style>
 
-                                                    .{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string }}-title_bar_icon{
+                                                    .{{ courseId }}-title_bar_icon{
                                                         visibility: hidden;
                                                     }
 
-                                                    #{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-well:hover .{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4]  + "-semester" + semesterNumber|string}}-title_bar_icon {
+                                                    #{{ courseId }}-well:hover .{{ courseId }}-title_bar_icon {
                                                         visibility: visible;
                                                     }
                                                 </style>
 
-                                                {#{% if courseDict['course_acr'] in COURSE_DICT %}{{ COURSE_DICT[courseDict['course_acr']]['year'] }}{% if COURSE_DICT[courseDict['course_acr']]['types'] is defined %}{% for type in COURSE_DICT[courseDict['course_acr']]['types'] %}{{ type }}{% else %}{{ 'unclassified' }}{% endfor %}{% endif %}{% endif %}#}
-
-{#                                                <div data-category="year{% if courseDict['course_acr'] in COURSE_DICT %}{{ COURSE_DICT[courseDict['course_acr']]['year'] }} {% for type in COURSE_DICT[courseDict['course_acr']]['types'] %}  {% if type not in COURSE_DICT[courseDict['course_acr']]['types'] %}#}
-                                                <div data-category="year{% if courseDict['course_acr'] in COURSE_DICT %}{{ COURSE_DICT[courseDict['course_acr']]['year'] }} {% if COURSE_DICT[courseDict['course_acr']]['types'] is defined %} {% for type in COURSE_DICT[courseDict['course_acr']]['types'] %} {{ type }} {% else %} {{ 'unclassified' }} {% endfor %}{% endif %}{% endif %} "
-                                                     class="well well-sm pointer course-box subject {{ courseDict['course_acr'] }}"
-                                                     id="{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4]  + "-semester" + semesterNumber|string}}-well"
-                                                     acr="{{ courseDict['course_acr'] }}"
+                                                <div data-category="year{% if courseAcr in COURSE_DICT %}{{ courseAcrInCourseDict['year'] }} {% if courseAcrInCourseDict['types'] is defined %} {% for type in courseAcrInCourseDict['types'] %} {{ type }} {% else %} {{ 'unclassified' }} {% endfor %}{% endif %}{% endif %} "
+                                                     class="well well-sm pointer course-box subject {{ courseAcr }} "
+                                                     id="{{ courseId }}-well"
+                                                     acr="{{ courseAcr }}"
                                                      semester="{{ semesterNumber }}"
                                                      data-toggle="modal"
-                                                     data-target="#{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-modal">
+                                                     data-target="#{{ courseId }}-modal">
                                                     <div class="course_title_bar">
-                                                        <i id="{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-pin" class="fa fa-thumb-tack title_bar_icon pin {{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-title_bar_icon" aria-hidden="true"></i>
-                                                        <span class="course_acr"><b>{{ courseDict["course_acr"] }}</b></span>
-                                                        <i id="{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-x" class="fa fa-times title_bar_icon x {{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + "-semester" + semesterNumber|string}}-title_bar_icon" aria-hidden="true"></i>
+                                                        <i id="{{ courseId }}-pin" class="fa fa-thumb-tack title_bar_icon pin {{ courseId}}-title_bar_icon" aria-hidden="true"></i>
+                                                        <span class="course_acr"><b>{{ courseAcr }}</b></span>
+                                                        <i id="{{ courseId }}-x" class="fa fa-times title_bar_icon x {{ courseId }}-title_bar_icon" aria-hidden="true"></i>
                                                     </div>
-                                                    {% if courseDict["course_acr"] in COURSE_DICT %}
-                                                        <p class="course_name">{{ (COURSE_DICT[courseDict["course_acr"]])['course'] }}</p>
-                                                        <p class="course_location">{{ matchVenue(courseDict["course_details"]) }}</p>
+                                                    {% if courseAcr in COURSE_DICT %}
+                                                        <p class="course_name">{{ courseAcrInCourseDict['course'] }}</p>
+                                                        <p class="course_location">{{ venueFromDetails }}</p>
                                                     {% endif %}
                                                 </div>
 
@@ -300,38 +305,37 @@ u'Fri': [
                                                 <!-- MODAL -->
 
                                                 <div class="modal fade"
-                                                     id="{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + '-semester' + semesterNumber|string}}-modal"
+                                                     id="{{ courseId }}-modal"
                                                      tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 
                                                     <script>
 
+                                                        var {{ courseIdJS }}Coordinates = {{ venueToUOEJsonCoord }};
 
-                                                        var {{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Coordinates = {{ matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict['course_details']))) }};
+                                                        $("#{{  courseId }}-modal").on('shown.bs.modal', function () {
 
-                                                        $("#{{  courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + '-semester' + semesterNumber|string}}-modal").on('shown.bs.modal', function () {
-
-                                                            var {{  courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Map = new mapboxgl.Map({
-                                                                container: "{{  courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + '-semester' + semesterNumber|string}}-map",
+                                                            var {{  courseIdJS }}Map = new mapboxgl.Map({
+                                                                container: "{{  courseId }}-map",
                                                                 style: 'mapbox://styles/mapbox/streets-v9',
                                                                 zoom: 16,
-                                                                center: {{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Coordinates
+                                                                center: {{ courseIdJS }}Coordinates
                                                             });
 
 
-                                                            var {{courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Directions = new MapboxDirections({
+                                                            var {{courseIdJS }}Directions = new MapboxDirections({
                                                                 accessToken: mapboxgl.accessToken,
                                                                 profile: 'mapbox.walking',
                                                                 unit: 'metric'
                                                             });
 
-                                                            {{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Map.addControl({{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Directions, 'top-left');
-                                                            {{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Directions.setDestination({{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Coordinates);
+                                                            {{ courseIdJS }}Map.addControl({{ courseIdJS }}Directions, 'top-left');
+                                                            {{ courseIdJS }}Directions.setDestination({{ courseIdJS }}Coordinates);
 
 
                                                             // MARKERS
-                                                            {{ courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Map.on('load', function () {
+                                                            {{ courseIdJS }}Map.on('load', function () {
 
-                                                                {{  courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Map.addSource("markers", {
+                                                                {{ courseIdJS }}Map.addSource("markers", {
                                                                     "type": "geojson",
                                                                     "data": {
                                                                         "type": "FeatureCollection",
@@ -339,7 +343,7 @@ u'Fri': [
                                                                             "type": "Feature",
                                                                             "geometry": {
                                                                                 "type": "Point",
-                                                                                "coordinates": {{ matchNameInJsonToLongLat(UOE_VENUE_DATA, mostSimilar(UOE_VENUE_DATA, matchVenue(courseDict["course_details"]))) }}
+                                                                                "coordinates": {{ venueToUOEJsonCoord }}
                                                                             },
                                                                             "properties": {
                                                                                 "title": "Mapbox DC",
@@ -349,7 +353,7 @@ u'Fri': [
                                                                     }
                                                                 });
 
-                                                                {{  courseDict['course_acr'] + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string}}Map.addLayer({
+                                                                {{ courseIdJS }}Map.addLayer({
                                                                     "id": "markers",
                                                                     "source": "markers",
                                                                     "type": "circle",
@@ -375,8 +379,8 @@ u'Fri': [
                                                                         aria-hidden="true">&times;</span>
                                                                 </button>
                                                                 <h4 class="modal-title" id="myModalLabel">
-                                                                    {% if courseDict["course_acr"] in COURSE_DICT %}
-                                                                        <h2>{{ (COURSE_DICT[courseDict["course_acr"]])['course'] }}</h2>
+                                                                    {% if courseAcr in COURSE_DICT %}
+                                                                        <h2>{{ courseAcrInCourseDict['course'] }}</h2>
 
 
                                                                     {% endif %}</h4>
@@ -384,13 +388,13 @@ u'Fri': [
 
 
                                                             <div class="modal-body">
-                                                                {% if courseDict["course_acr"] in COURSE_DICT %}
+                                                                {% if courseAcr in COURSE_DICT %}
                                                                     <div class="course-details-wrapper">
                                                                         <div class="col-sm-6 row course-details-container">
                                                                         <div class="row">
                                                                             <a target="_blank"
-                                                                               href="{% if courseDict['course_acr'] in COURSE_DICT %}
-                                                                                                            {{ (COURSE_DICT[courseDict['course_acr']])['course_url'] }}
+                                                                               href="{% if courseAcr in COURSE_DICT %}
+                                                                                                            {{ courseAcrInCourseDict['course_url'] }}
                                                                                                             {% endif %}
                                                                                                             ">
                                                                                 <div class="course-details well well-sm modal-well">
@@ -402,18 +406,18 @@ u'Fri': [
                                                                                 </div>
                                                                             </a>
                                                                             <div class="course-details well well-sm modal-well">
-                                                                                <p class="big-icon">{{ COURSE_DICT[courseDict["course_acr"]]['year'] }}</p>
+                                                                                <p class="big-icon">{{ courseAcrInCourseDict['year'] }}</p>
                                                                                 <p>YEAR</p>
                                                                             </div>
                                                                             <div class="course-details well well-sm modal-well">
-                                                                                <p class="big-icon">{{ COURSE_DICT[courseDict["course_acr"]]['credits'] }}</p>
+                                                                                <p class="big-icon">{{ courseAcrInCourseDict['credits'] }}</p>
                                                                                 <p>CREDITS</p>
                                                                             </div>
                                                                         </div>
                                                                         <div class="row">
                                                                             <a target="_blank"
-                                                                               href="{% if courseDict['course_acr'] in COURSE_DICT %}
-                                                                                                            {{ (COURSE_DICT[courseDict['course_acr']])['drps'] }}
+                                                                               href="{% if courseAcr in COURSE_DICT %}
+                                                                                                            {{ courseAcrInCourseDict['drps'] }}
                                                                                                             {% endif %}
                                                                                                             ">
                                                                                 <div class="course-details well well-sm modal-well">
@@ -424,11 +428,11 @@ u'Fri': [
                                                                                 </div>
                                                                             </a>
                                                                             <div class="course-details well well-sm modal-well">
-                                                                                <p class="big-icon">{{ COURSE_DICT[courseDict["course_acr"]]['semester'] }}</p>
+                                                                                <p class="big-icon">{{ courseAcrInCourseDict['semester'] }}</p>
                                                                                 <p class="homepage-text">SEMESTER</p>
                                                                             </div>
                                                                             <div class="course-details well well-sm modal-well">
-                                                                                <p class="big-icon">{{ COURSE_DICT[courseDict["course_acr"]]['level'] }}</p>
+                                                                                <p class="big-icon">{{ courseAcrInCourseDict['level'] }}</p>
                                                                                 <p class="homepage-text">LEVEL</p>
                                                                             </div>
                                                                         </div>
@@ -441,24 +445,19 @@ u'Fri': [
                                                                                 <img id="door" src="{{ url_for('static', filename='img/door.svg') }}">
                                                                                  {{ matchRoom(courseDict["course_room"]) }}
                                                                             </p>
-                                                                            <p><i class="fa fa-bank"></i> {{ mostSimilar(UOE_VENUE_DATA,
-                                                            matchVenue(courseDict["course_details"])) }}</p>
+                                                                            <p><i class="fa fa-bank"></i> {{ mostSimilarVenueFromDetails }}</p>
                                                                             <p><span
-                                                                                    class="glyphicon glyphicon-map-marker"></span> {{ matchNameInJsonToDict(UOE_VENUE_DATA,
-                                                            mostSimilar(UOE_VENUE_DATA,
-                                                            matchVenue(courseDict["course_details"])))['address1'] }},
-                                                                                {{ matchNameInJsonToDict(UOE_VENUE_DATA,
-                                                            mostSimilar(UOE_VENUE_DATA,
-                                                            matchVenue(courseDict["course_details"])))['postcode'] }}
+                                                                                    class="glyphicon glyphicon-map-marker"></span> {{ venueToUOEJsonDict['address1'] }},
+                                                                                {{ venueToUOEJsonDict['postcode'] }}
                                                                             </p>
                                                                         </div>
                                                                     </div>
-                                                                    <div id="{{ courseDict['course_acr'] + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + '-semester' + semesterNumber|string}}-map"
+                                                                    <div id="{{ courseId }}-map"
                                                                          class='map'></div>
                                                                 {% endif %}
                                                                 <!--<a target="_blank" href="
                                                                     {% if courseAcr in COURSE_DICT %}-->
-                                                                    <!--{{(COURSE_DICT[courseAcr])['course_url']}}-->
+                                                                    <!--{{courseAcrInCourseDict['course_url']}}-->
                                                                     <!--{% endif %}-->
                                                                 <!--"><span class="glyphicon glyphicon-home"></span>-->
                                                                 <!--</a>-->
