@@ -17,6 +17,21 @@ body {
     width: 300px;
     height: auto;
 }
+#logo-and-title{
+    float: left;
+    padding: 0 30px 0 20px;
+}
+
+.buttons{
+    margin: 15px;
+    float: left;
+}
+
+
+#select{
+    float: left;
+    margin: 12px 30px 0 0;
+}
 
 #header-table {
     margin: 0;
@@ -178,6 +193,11 @@ body {
 #door {
     height: 18px;
 }
+
+.header-div{
+    float: left;
+}
+
 
 @media screen and (max-width: 1000px) {
     canvas{
