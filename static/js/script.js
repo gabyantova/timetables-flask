@@ -26,13 +26,16 @@ $(document).ready(function () {
 
 
 
+
+    
     /////////////////
     ///  SORTING  ///
     /////////////////
 
-
     var bySubject = ["[data-category~='CS']", "[data-category~='AI']", "[data-category~='CG']", "[data-category~='SE']", "[data-category~='unclassified']"];
     var byYear = ["[data-category~='year1']", "[data-category~='year2']", "[data-category~='year3']", "[data-category~='year4']", "[data-category~='year5']"];
+    //var byBoth = ["[data-category~='CS']", "[data-category~='AI']", "[data-category~='CG']", "[data-category~='SE']", "[data-category~='unclassified']", "[data-category~='year1']", "[data-category~='year2']", "[data-category~='year3']", "[data-category~='year4']", "[data-category~='year5']"];
+
     $("input[name=subject]").on("change", function () {
         var value = $(this).attr("value");
         if (this.checked){
@@ -51,9 +54,6 @@ $(document).ready(function () {
             byYear.splice(byYear.indexOf("[data-category~='" + value + "']"), 1);
         }
     });
-
-
-
     $("input").on("change", function () {
         var subjectSelector = '';
         var yearSelector = '';
@@ -73,8 +73,5 @@ $(document).ready(function () {
 
         $allCourseBoxes.hide();
         $allCourseBoxes.filter(subjectSelector).filter(yearSelector).show();
-
     });
-
-
 });

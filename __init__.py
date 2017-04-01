@@ -7,13 +7,16 @@ print (sys.version)
 
 WEEKDAYS = Weekdays()
 URL = Get_url()
-COURSE_DICT = Get_course_dict()
+TIMES_LIST = Get_times_list()
+
 CONTENT_DICT = Get_content_dict()
+COURSE_DICT = Get_course_dict()
 VENUE_DICT = Get_venue_dict()
 ALTERNATE_VENUE_DICT = Get_alternate_venue_dict()
 UOE_VENUE_DATA = Get_UOE_venue_data()
 ROOM_DICTIONARY = Get_room_dictionary()
-TIMES_LIST = Get_times_list()
+
+print CONTENT_DICT
 
 app = Flask(__name__)
 

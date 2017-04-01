@@ -1,4 +1,4 @@
-
+var checkboxes = $(':checkbox');
 $("#showPinnedCoursesButton").click(function () {
     if (pinnedCourses.length == 0) {
         alert("No courses are currently pinned.\n To pin a course, hover over it and click the pin icon next to its name.");
@@ -15,11 +15,17 @@ $("#showPinnedCoursesButton").click(function () {
         });
     }
 });
+
+
 $("#restoreAllCoursesButton").click(function () {
     $.each($('.course-box'), function () {
         $(this).show();
     });
+    // Check all checkboxes
+    checkboxes.prop('checked', true);
 });
+
+
 $("#restoreAndRemoveAllPins").click(function () {
     pinnedCourses = [];
     $.each($('.course-box'), function () {
@@ -27,6 +33,13 @@ $("#restoreAndRemoveAllPins").click(function () {
         $(this).show();
     });
 
+    $("#showPinnedCoursesButton").addClass("disabled");
+
+
+    // Check all checkboxes
+    checkboxes.prop('checked', true);
+
+    // Disable the "Show pinned couses" button since no courses are pinned
     $("#showPinnedCoursesButton").addClass("disabled");
 
 });

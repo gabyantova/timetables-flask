@@ -15,6 +15,14 @@ $(".x").click(function () {
         $(this).hide();
     });
 
+    // Disable the "Show pinned couses" button if no courses are pinned
+    if (pinnedCourses.length){
+        $("#showPinnedCoursesButton").removeClass("disabled");
+    }
+    else {
+        $("#showPinnedCoursesButton").addClass("disabled");
+    }
+
 
 });
 
@@ -22,12 +30,7 @@ $(".x").click(function () {
 $(".pin").click(function () {
 
     // need to fix
-    if (pinnedCourses.length && !$("#showPinnedCoursesButton").hasClass("disabled")){
-        $("#showPinnedCoursesButton").addClass("disabled");
-    }
-    else if (pinnedCourses.length == 0){
-        $("#showPinnedCoursesButton").removeClass("disabled");
-    }
+
 
     // if ($("#showPinnedCoursesButton").hasClass("disabled")){
     //     $('.tooltip').not(this).hide();
@@ -53,6 +56,19 @@ $(".pin").click(function () {
     $("div[acr=" + clickedPinAcr + "]").each(function () {
         $(this).toggleClass("pinned");
     });
+
+    // Once the user learns how to pin, the tooltip will no longer be displayed
+    $('[data-toggle="tooltip"]').tooltip('destroy')
+
+    // Disable the "Show pinned couses" button if no courses are pinned
+    if (pinnedCourses.length){
+        $("#showPinnedCoursesButton").removeClass("disabled");
+    }
+    else {
+        $("#showPinnedCoursesButton").addClass("disabled");
+    }
+
+
 
 });
 
