@@ -57,7 +57,6 @@ $(document).ready(function () {
     $("input").on("change", function () {
         var subjectSelector = '';
         var yearSelector = '';
-
         var $allCourseBoxes = $('.course-box');
 
             $($('input[name=subject]:checked')).each(function (index, bySubject) {

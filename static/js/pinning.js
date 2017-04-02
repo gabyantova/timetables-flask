@@ -22,22 +22,10 @@ $(".x").click(function () {
     else {
         $("#showPinnedCoursesButton").addClass("disabled");
     }
-
-
 });
 
 
 $(".pin").click(function () {
-
-    // need to fix
-
-
-    // if ($("#showPinnedCoursesButton").hasClass("disabled")){
-    //     $('.tooltip').not(this).hide();
-    // }
-    // else{
-    //     //$('[data-toggle="tooltip"]').tooltip("hide");
-    // }
 
     // Retrieve the acronym of clicked course
     var clickedPinAcr = $(this).closest(".course-box").attr("acr");

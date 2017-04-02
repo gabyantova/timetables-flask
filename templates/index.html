@@ -9,6 +9,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.css' rel='stylesheet'/>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/pretty-checkbox/2.2.0/pretty.min.css' rel='stylesheet'/>
 
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
@@ -24,8 +25,9 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/awesome-bootstrap-checkbox.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
 
 </head>
@@ -35,54 +37,76 @@
 <div role="tabpanel">
 
     <div id="header">
-        <div class="row">
-            <div id="logo-and-title">
+
+        <div class="">
+            <div id="logo-and-title" class="">
                 <img id="logo" src="https://upload.wikimedia.org/wikipedia/en/c/ca/University_of_Edinburgh_School_of_Informatics_logo.jpg">
             </div>
             <div id="select" class="tags">
-                <div id="subject-sorting" class="">
-                    <label for="AI">
-                        <input type="checkbox" name="subject" value="AI" id="AI" class="sort"/>
-                        AI
-                    </label>
-                    <label for="CG">
-                        <input type="checkbox" name="subject" value="CG" id="CG" class="sort"/>
-                        CG
-                    </label>
-                    <label for="CS">
-                        <input type="checkbox" name="subject" value="CS" id="CS" class="sort"/>
-                        CS
-                    </label>
-                    <label for="SE">
-                        <input type="checkbox" name="subject" value="SE" id="SE" class="sort"/>
-                        SE
-                    </label>
-                    <label for="unclassified">
-                        <input type="checkbox" name="subject" value="unclassified" id="unclassified" class="sort"/>
-                        Unclassified
-                    </label>
+                <div id="subject-sorting">
+                        <div class="checkallwrapper checkbox">
+                            <input type="checkbox" class="styled" id="checkallsubjects">
+                            <label for="checkallsubjects" id="checkallsubjectslabel" class="checkalllabel">
+                                Uncheck all
+                            </label>
+                        </div>
+                        <div class="checkbox checkbox-primary">
+                            <input type="checkbox" name="subject" value="AI" id="AI" class="sort styled">
+                            <label class="sortinglabel" for="AI">
+                                AI
+                            </label>
+
+                            <input type="checkbox" name="subject" value="CG" id="CG" class="sort styled">
+                            <label class="sortinglabel" for="CG">
+                                CG
+                            </label>
+
+                            <input type="checkbox" name="subject" value="CS" id="CS" class="sort styled">
+                            <label class="sortinglabel" for="CS">
+                                CS
+                            </label>
+
+                            <input type="checkbox" name="subject" value="SE" id="SE" class="sort styled">
+                            <label class="sortinglabel" for="SE">
+                                SE
+                            </label>
+
+                            <input type="checkbox" name="subject" value="unclassified" id="unclassified" class="sort styled">
+                            <label class="sortinglabel" for="unclassified">
+                                unclassified
+                            </label>
+                        </div>
+
                 </div>
-                <div id="year-sorting" class="">
-                    <label>
-                        <input type="checkbox" name="year" value="year1" id="year1" class="sort"/>
-                        Year 1
-                    </label>
-                    <label>
-                        <input type="checkbox" name="year" value="year2" id="year2" class="sort"/>
-                        Year 2
-                    </label>
-                    <label>
-                        <input type="checkbox" name="year" value="year3" id="year3" class="sort"/>
-                        Year 3
-                    </label>
-                    <label>
-                        <input type="checkbox" name="year" value="year4" id="year4" class="sort"/>
-                        Year 4
-                    </label>
-                    <label>
-                        <input type="checkbox" name="year" value="year5" id="year5" class="sort"/>
-                        Year 5
-                    </label>
+                <div id="year-sorting">
+                    <div class="checkallwrapper checkbox">
+                        <input type="checkbox" class="styled" id="checkallyears">
+                        <label for="checkallyears" id="checkallyearslabel" class="checkalllabel">
+                            Uncheck all
+                        </label>
+                    </div>
+                    <div class="checkbox checkbox-primary">
+                    <input type="checkbox" name="year" value="year1" id="year1" class="sort styled">
+                        <label class="sortinglabel" for="year1">
+                            Year 1
+                        </label>
+                    <input type="checkbox" name="year" value="year2" id="year2" class="sort styled">
+                        <label class="sortinglabel" for="year2">
+                            Year 2
+                        </label>
+                    <input type="checkbox" name="year" value="year3" id="year3" class="sort styled">
+                        <label class="sortinglabel" for="year3">
+                            Year 3
+                        </label>
+                    <input type="checkbox" name="year" value="year4" id="year4" class="sort styled">
+                        <label class="sortinglabel" for="year4">
+                            Year 4
+                        </label>
+                    <input type="checkbox" name="year" value="year5" id="year5" class="sort styled">
+                        <label class="sortinglabel" for="year5">
+                            Year 5
+                        </label>
+                    </div>
                 </div>
 
 
@@ -102,7 +126,7 @@
 
             </div>
         </div>
-        <div id="whatfilters"></div>
+
         <ul class="nav nav-tabs">
             <li id="semester1-li" class="active">
                 <a href="#semester1-table" semester="1" class="semester-tab" id="semester1-tab" data-toggle="tab">Semester
@@ -173,9 +197,7 @@
                                                 </style>
 
                                                 <div data-category="year{% if courseAcr in COURSE_DICT %}{{ courseAcrInCourseDict['year'] }} {% if courseAcrInCourseDict['types'] is defined %} {% for type in courseAcrInCourseDict['types'] %} {{ type }} {% else %} {{ 'unclassified' }} {% endfor %}{% endif %}{% endif %}"
-                                                     data-year="year{% if courseAcr in COURSE_DICT %}{{ courseAcrInCourseDict['year'] }} {% endif %}"
-                                                     data-subject="{% if courseAcr in COURSE_DICT %}{% if courseAcrInCourseDict['types'] is defined %} {% for type in courseAcrInCourseDict['types'] %} {{ type }} {% else %} {{ 'unclassified' }} {% endfor %}{% endif %}{% endif %}"
-                                                     class="well well-sm pointer course-box subject {{ courseAcr }} "
+                                                     class="well well-sm pointer course-box subject {{ courseAcr }} year{% if courseAcr in COURSE_DICT %}{{ courseAcrInCourseDict['year'] }} {% if courseAcrInCourseDict['types'] is defined %} {% for type in courseAcrInCourseDict['types'] %} {{ type }} {% else %} {{ 'unclassified' }} {% endfor %}{% endif %}{% endif %}"
                                                      id="{{ courseId }}-well"
                                                      acr="{{ courseAcr }}"
                                                      semester="{{ semesterNumber }}"
@@ -205,32 +227,23 @@
                                                      tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 
                                                     <script>
-
                                                         var {{ courseIdJS }}Coordinates = {{ venueToUOEJsonCoord }};
-
                                                         $("#{{  courseId }}-modal").on('shown.bs.modal', function () {
-
                                                             var {{  courseIdJS }}Map = new mapboxgl.Map({
                                                                 container: "{{  courseId }}-map",
                                                                 style: 'mapbox://styles/mapbox/streets-v9',
                                                                 zoom: 16,
                                                                 center: {{ courseIdJS }}Coordinates
                                                             });
-
-
                                                             var {{courseIdJS }}Directions = new MapboxDirections({
                                                                 accessToken: mapboxgl.accessToken,
                                                                 profile: 'mapbox.walking',
                                                                 unit: 'metric'
                                                             });
-
                                                             {{ courseIdJS }}Map.addControl({{ courseIdJS }}Directions, 'top-left');
                                                             {{ courseIdJS }}Directions.setDestination({{ courseIdJS }}Coordinates);
-
-
                                                             // MARKERS
                                                             {{ courseIdJS }}Map.on('load', function () {
-
                                                                 {{ courseIdJS }}Map.addSource("markers", {
                                                                     "type": "geojson",
                                                                     "data": {
@@ -248,7 +261,6 @@
                                                                         }]
                                                                     }
                                                                 });
-
                                                                 {{ courseIdJS }}Map.addLayer({
                                                                     "id": "markers",
                                                                     "source": "markers",
@@ -260,12 +272,12 @@
                                                                 });
                                                             })
                                                             ;
+                                                            {{ courseIdJS }}Map.addControl(new mapboxgl.GeolocateControl());
 
 
                                                         });
-
-
                                                     </script>
+
 
                                                     <div class="modal-dialog modal-lg" role="document">
                                                         <div class="modal-content">
@@ -345,7 +357,7 @@
                                                                                 {{ matchRoom(courseDict["course_room"]) }}
                                                                             </p>
                                                                             <p>
-                                                                                <i class="fa fa-bank"></i> {{ mostSimilarVenueFromDetails }}
+                                                                                <i class="fa fa-bank"></i> {{ venueFromDetails }}
                                                                             </p>
                                                                             <p><span
                                                                                     class="glyphicon glyphicon-map-marker"></span> {{ venueToUOEJsonDict['address1'] }},

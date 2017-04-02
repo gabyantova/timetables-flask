@@ -19,27 +19,62 @@ body {
 }
 #logo-and-title{
     float: left;
-    padding: 0 30px 0 20px;
+    padding: 0 30px 0 0px;
 }
 
 .buttons{
-    margin: 15px;
-    float: left;
+    margin: 15px 20px 0 0;
+    float: right;
+    width: 30%;
+    margin: 4px;
 }
 
 
 #select{
     float: left;
-    margin: 12px 30px 0 0;
+    margin: 7px 5px 0 0;
+    width: 543px;
 }
+
+.checkalllabel{
+    width: 87px;
+}
+.sortinglabel{
+    width: 76px;
+}
+
+
+
+
 
 #header-table {
     margin: 0;
 }
 
-.collapse {
 
+.btn-primary{
+    float: left;
+    margin: 1px 1px;
 }
+
+.btn-sm{
+    padding: 0px 5px;
+}
+
+#showPinnedCoursesButton{
+    width: 49%;
+}
+
+#restoreAllCoursesButton{
+    width: 49%;
+}
+
+#restoreAndRemoveAllPins{
+    width: 98.5%;
+}
+
+
+
 
 .collapse > #logo {
     width: 250px;
@@ -143,6 +178,26 @@ body {
     font-size: small;
 }
 
+#subject-sorting{
+    overflow: hidden;
+}
+
+.checkallwrapper{
+    float:left;
+    margin-top: 0;
+}
+.checkbox-primary{
+    overflow: hidden;
+    float: left;
+    width: 420px
+}
+.checkbox{
+    margin-top: 5px !important;
+}
+
+#checkallsubjectslabel{
+    float: left;
+}
 
 
 
@@ -156,8 +211,6 @@ body {
 .title_bar_icon:hover{
     color: dimgrey;
 }
-
-
 
 .pin{
     float: left;
@@ -199,7 +252,8 @@ body {
 }
 
 
-@media screen and (max-width: 1000px) {
+
+@media screen and (max-width: 1305px) {
     canvas{
         position: inherit !important;
     }
@@ -247,7 +301,68 @@ body {
         width: 100%;
         float: left;
     }
+
+    #logo-and-title{
+        width: 285px;
+    }
+    #logo-and-title > img {
+        width: 270px;
+    }
+
+    #select{
+        width: 530px;
+    }
+
+    .buttons{
+        width: 100%;
+    }
+    #showPinnedCoursesButton{
+        width: 33%;
+    }
+
+    #restoreAllCoursesButton{
+        width: 33%;
+    }
+
+    #restoreAndRemoveAllPins{
+        width: 33%;
+    }
+
+    .sortinglabel{
+        width:18%;
+    }
+    #checkallsubjectslabel, #checkallyearslabel{
+        width: 88px;
+    }
+
 }
+
+
+@media screen and (max-width: 800px) {
+
+    #logo-and-title{
+        width: 100%;
+    }
+    #select{
+        width:100%;
+    }
+    .buttons{
+        width:100%
+    }
+
+    #showPinnedCoursesButton{
+        width: 100%;
+    }
+    #restoreAllCoursesButton{
+        width: 100%;
+    }
+    #restoreAndRemoveAllPins{
+        width: 100%;
+    }
+
+}
+
+
 
 @media screen and (max-width: 600px) {
     .course-box {
@@ -256,7 +371,6 @@ body {
         float: none;
         margin: 10px 0;
     }
-
     .course_acr{
         font-size: 23px;
     }
@@ -266,5 +380,8 @@ body {
     }
     .course_location {
         font-size: 15px;
+    }
+    .table{
+        margin-top: 170px;
     }
 }

@@ -190,5 +190,4 @@ def Get_content_dict():
                     semester_dict[day_of_the_week].append(final_array_courses_that_hour)
 
         semesters_list.append(semester_dict)
-    # print semesters_list[1]
     return semesters_list

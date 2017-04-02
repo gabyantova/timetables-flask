@@ -1,4 +1,6 @@
-    var currentSemester = "1";
+
+var currentSemester = "1";
+
     $(".semester-tab").click(function () {
         currentSemester = $(this).attr("semester");
     });
