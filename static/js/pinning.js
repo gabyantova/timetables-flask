@@ -20,6 +20,7 @@ $(".x").click(function () {
         $("#showPinnedCoursesButton").removeClass("disabled");
     }
     else {
+        // No need to check if it already has that class because jQuery will check for us before adding it
         $("#showPinnedCoursesButton").addClass("disabled");
     }
 });
@@ -45,7 +46,7 @@ $(".pin").click(function () {
         $(this).toggleClass("pinned");
     });
 
-    // Once the user learns how to pin, the tooltip will no longer be displayed
+    // Once the user learns how to pin, the button tooltip will no longer be displayed
     $('[data-toggle="tooltip"]').tooltip('destroy')
 
     // Disable the "Show pinned couses" button if no courses are pinned
@@ -53,6 +54,7 @@ $(".pin").click(function () {
         $("#showPinnedCoursesButton").removeClass("disabled");
     }
     else {
+        // No need to check if it already has that class because jQuery will check for us before adding it
         $("#showPinnedCoursesButton").addClass("disabled");
     }
 

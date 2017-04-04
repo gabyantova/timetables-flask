@@ -1,5 +1,5 @@
     $(document).ready(function () {
-        function responsivetable() {
+        (function () {
             var headertext = [];
             var headers = document.querySelectorAll("thead");
             var tablebody = document.querySelectorAll("tbody");
@@ -21,5 +21,5 @@
                     }
                 }
             }
-        }
+        } ());
     });

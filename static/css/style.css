@@ -234,13 +234,22 @@ body {
     float: right;
 }
 
-
+.dayOfTheWeek{
+    text-align: center;
+    font-size: 17px;
+    text-transform: uppercase;
+}
 
 
 .course-box {
     text-align: center;
     line-height: 1.2;
-    padding: 9px
+    padding: 9px;
+    margin: 9px 0;
+}
+
+.course-box > p {
+    margin: 5px 0;
 }
 
 #door {
@@ -311,6 +320,7 @@ body {
 
     #select{
         width: 530px;
+        float: right;
     }
 
     .buttons{
@@ -383,5 +393,8 @@ body {
     }
     .table{
         margin-top: 170px;
+    }
+    #select{
+        margin: 0 -8px;
     }
 }

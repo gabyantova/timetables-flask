@@ -112,7 +112,7 @@
 
             </div>
             <div class="buttons">
-                <button id="showPinnedCoursesButton" type="button" class="btn btn-primary disabled" data-placement="bottom" data-toggle="tooltip" title="Hover over a course to pin it">
+                <button id="showPinnedCoursesButton" type="button" class="btn btn-primary disabled" data-placement="left" data-toggle="tooltip" title="Hover over a course to pin it">
                     Show pinned courses
                 </button>
                 <button id="restoreAllCoursesButton" type="button" class="btn btn-primary">
@@ -298,7 +298,7 @@
                                                             <div class="modal-body">
                                                                 {% if courseAcr in COURSE_DICT %}
                                                                     <div class="course-details-wrapper">
-                                                                        <div class="col-sm-6 row course-details-container">
+                                                                        <div class="col-sm-4 row course-details-container">
                                                                             <div class="row">
                                                                                 <a target="_blank"
                                                                                    href="{% if courseAcr in COURSE_DICT %}
@@ -347,7 +347,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="col-sm-4">
+                                                                        <div class="col-sm-6">
                                                                             <p><span
                                                                                     class="glyphicon glyphicon-time"></span> {{ day }}, {{ TIMES_LIST[timeLoopIndex] }}
                                                                             </p>

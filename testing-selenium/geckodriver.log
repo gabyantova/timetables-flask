@@ -2260,3 +2260,61 @@ JavaScript error: http://127.0.0.1:5000/, line 27809: SyntaxError: missing ; bef
 JavaScript error: http://127.0.0.1:5000/, line 34343: SyntaxError: missing ; before statement
 JavaScript error: http://127.0.0.1:5000/, line 39977: SyntaxError: missing ; before statement
 JavaScript error: http://127.0.0.1:5000/, line 40412: SyntaxError: missing ; before statement
+1491148769093	geckodriver	INFO	Listening on 127.0.0.1:48193
+1491148770182	mozprofile::profile	INFO	Using profile path /tmp/rust_mozprofile.hDGVJQ0DcgNe
+1491148770183	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args []
+1491148770186	geckodriver::marionette	INFO	Connecting to Marionette on localhost:36877
+1491148770735	addons.xpi	WARN	Add-on langpack-en-ZA@firefox.mozilla.org is not compatible with application version.
+1491148770738	addons.xpi	WARN	Add-on langpack-en-ZA@firefox.mozilla.org is not compatible with application version.
+1491148770755	addons.xpi	WARN	Add-on langpack-en-GB@firefox.mozilla.org is not compatible with application version.
+1491148770755	addons.xpi	WARN	Add-on langpack-en-GB@firefox.mozilla.org is not compatible with application version.
+1491148771225	Marionette	INFO	Listening on port 36877
+1491148771535	addons.xpi	WARN	Add-on langpack-en-ZA@firefox.mozilla.org is not compatible with application version.
+1491148771536	addons.xpi	WARN	Add-on langpack-en-GB@firefox.mozilla.org is not compatible with application version.
+1491148771542	addons.xpi	WARN	Add-on langpack-en-ZA@firefox.mozilla.org is not compatible with application version.
+1491148771542	addons.xpi	WARN	Add-on langpack-en-GB@firefox.mozilla.org is not compatible with application version.
+1491148772193	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://127.0.0.1:5000/static/js/jquery.cookie.js, line 7: SyntaxError: expected expression, got '<'
+JavaScript error: http://127.0.0.1:5000/, line 2635: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 6322: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 7848: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 9146: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 12454: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 14408: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 18109: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 18758: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 23245: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 26076: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 27809: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 34343: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 39977: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 40412: SyntaxError: missing ; before statement
+1491148793682	geckodriver	INFO	Listening on 127.0.0.1:53216
+1491148794642	mozprofile::profile	INFO	Using profile path /tmp/rust_mozprofile.Z93zPZ6XsCK1
+1491148794643	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args []
+1491148794650	geckodriver::marionette	INFO	Connecting to Marionette on localhost:44747
+1491148795210	addons.xpi	WARN	Add-on langpack-en-ZA@firefox.mozilla.org is not compatible with application version.
+1491148795212	addons.xpi	WARN	Add-on langpack-en-ZA@firefox.mozilla.org is not compatible with application version.
+1491148795229	addons.xpi	WARN	Add-on langpack-en-GB@firefox.mozilla.org is not compatible with application version.
+1491148795230	addons.xpi	WARN	Add-on langpack-en-GB@firefox.mozilla.org is not compatible with application version.
+1491148795696	Marionette	INFO	Listening on port 44747
+1491148796003	addons.xpi	WARN	Add-on langpack-en-ZA@firefox.mozilla.org is not compatible with application version.
+1491148796004	addons.xpi	WARN	Add-on langpack-en-GB@firefox.mozilla.org is not compatible with application version.
+1491148796011	addons.xpi	WARN	Add-on langpack-en-ZA@firefox.mozilla.org is not compatible with application version.
+1491148796011	addons.xpi	WARN	Add-on langpack-en-GB@firefox.mozilla.org is not compatible with application version.
+1491148796776	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://127.0.0.1:5000/static/js/jquery.cookie.js, line 7: SyntaxError: expected expression, got '<'
+JavaScript error: http://127.0.0.1:5000/, line 2635: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 6322: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 7848: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 9146: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 12454: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 14408: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 18109: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 18758: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 23245: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 26076: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 27809: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 34343: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 39977: SyntaxError: missing ; before statement
+JavaScript error: http://127.0.0.1:5000/, line 40412: SyntaxError: missing ; before statement

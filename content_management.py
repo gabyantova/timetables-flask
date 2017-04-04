@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import urllib
+import urllib2
 import datetime
 import re
 import ast
@@ -58,15 +59,6 @@ def Get_course_dict():
                                               "level": col_list[7],
                                               "semester": col_list[10][1]}
 
-    # def pretty(d, indent=0):
-    #     for key, value in d.iteritems():
-    #         print '\t' * indent + str(key)
-    #         if isinstance(value, dict):
-    #             pretty(value, indent + 1)
-    #         else:
-    #             print '\t' * (indent + 1) + str(value)
-    #
-    # print pretty(COURSE_DICT)
 
     return COURSE_DICT
 
@@ -77,7 +69,6 @@ def Get_venue_dict():
     soup_venue = BeautifulSoup(urllib.urlopen(url_venue).read())
     building_and_room_codes = soup_venue.find("section", {"id": "block-system-main"}).find_all("ul")
     building_codes = building_and_room_codes[0].find_all("li")
-    # room_codes = building_and_room_codes[1].find_all("li")
 
     for building_code in building_codes:
         VENUE_DICT[building_code.find("strong").get_text().replace(" ", "")] = {
@@ -115,17 +106,18 @@ def Get_room_dictionary():
                          'SR2': 'Seminar Room 2',
                          'SR3': 'Seminar Room 3',
                          'GSQ LT': 'George Square Lecture Theatre',
-                         'RM 425 Anatomy LT': 'Anatomy Lecture Theatre, Doorway 3,  (1.425)',
-                         'Teviot LT': 'Meadows Lecture Theatre, Doorway 4, (G.07)',
-                         'SSLT': 'Sydney Smith Lecture Theatre, Doorway 1, (2.520)',
+                         'RM 425 Anatomy LT': 'Anatomy Lecture Theatre, Doorway 3 (1.425)',
+                         'Teviot LT': 'Meadows Lecture Theatre, Doorway 4 (G.07)',
+                         'SSLT': 'Sydney Smith Lecture Theatre, Doorway 1 (2.520)',
                          'HRB LT': 'H.R.B Lecture Theatre',
                          'BLT LT': 'Basement Lecture Theatre'
     }
     return ROOM_DICTIONARY
 
 def Get_UOE_venue_data():
-    soup = BeautifulSoup(urllib.urlopen("http://webproxy.is.ed.ac.uk/web-proxy/maps_edweb/data.php"))
-    content = soup.body.text
+    url = "http://webproxy.is.ed.ac.uk/web-proxy/maps_edweb/data.php"
+    soup = BeautifulSoup(urllib2.urlopen(url).read())
+    content = soup.get_text()
     var_list = content.split(";")
     var_list[1] = var_list[1].split("=")[1].strip()
     pointsOfInterest = ast.literal_eval(var_list[1])

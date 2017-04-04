@@ -16,6 +16,8 @@ ALTERNATE_VENUE_DICT = Get_alternate_venue_dict()
 UOE_VENUE_DATA = Get_UOE_venue_data()
 ROOM_DICTIONARY = Get_room_dictionary()
 
+print COURSE_DICT
+
 app = Flask(__name__)
 
 @app.context_processor

@@ -19,7 +19,6 @@ $("#showPinnedCoursesButton").click(function () {
 });
 
 
-
 // When the "Restore all courses" button is clicked
 $("#restoreAllCoursesButton").click(function () {
     // Restore all courses

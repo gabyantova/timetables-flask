@@ -27,12 +27,33 @@ class PythonOrgSearch(unittest.TestCase):
         # (4) check year 4
         driver.find_element_by_id("year4").click()
 
+        # (5) uncheck all subjects
+        driver.find_element_by_id("checkallsubjectslabel").click()
 
+        # (6) check SE
+        driver.find_element_by_id("SE").click()
 
-        # Assert all visible courses are either year 3 or year 4
+        # (7) check CS
+        driver.find_element_by_id("CS").click()
+
+        # Assert all visible courses from the first semester are either year 3 or year 4 and either CS or SE
         for course in allCourses:
             if course.is_displayed():
                 assert "year3" in course.get_attribute("class") or "year4" in course.get_attribute("class")
+                assert "CS" in course.get_attribute("class") or "SE" in course.get_attribute("class")
+
+        # (8) switch semesters
+        driver.find_element_by_id("semester2-tab").click()
+
+        allCourses = driver.find_elements_by_class_name("course-box")
+
+        # Assert all visible courses from the second semester are either year 3 or year 4 and either CS or SE
+        for course in allCourses:
+            if course.is_displayed():
+                assert "year3" in course.get_attribute("class") or "year4" in course.get_attribute("class")
+                assert "CS" in course.get_attribute("class") or "SE" in course.get_attribute("class")
+
+
 
     def test_use_case_2(self):
         driver = self.driver
@@ -40,7 +61,6 @@ class PythonOrgSearch(unittest.TestCase):
         # (1) open the webpage
         driver.get("http://127.0.0.1:5000/")
         courses = driver.find_elements_by_class_name("course-box")
-        pins = driver.find_elements_by_class_name("pin")
         random_number1 = randint(0, 10)
         random_number2 = randint(0, 10)
 
@@ -80,37 +100,36 @@ class PythonOrgSearch(unittest.TestCase):
         # Assert all visible courses have the same acronym as the courses
         for course in allCourses:
             if course.is_displayed():
-                assert random_course_acr1 in course.get_attribute("acr") or random_course_acr2 in course.get_attribute(
-                    "acr")
+                assert random_course_acr1 in course.get_attribute("acr") or random_course_acr2 in course.get_attribute("acr")
 
-    # def test_use_case_3(self):
-    #     driver = self.driver
-    #
-    #     # (1) open the webpage
-    #     driver.get("http://127.0.0.1:5000/")
-    #
-    #     random_number = randint(1, 10)
-    #     courses = driver.find_elements_by_class_name("course-box")
-    #     random_course = courses[random_number]
-    #
-    #     # (2) click on a course
-    #     random_course.click()
-    #
-    #     mapinstance = driver.find_element_by_class_name("map")
-    #     builder = ActionChains(driver)
-    #
-    #     # (3, 4) find a location on the map and click it
-    #     builder.move_to_element_with_offset(mapinstance, 30, 30).click(mapinstance).perform()
-    #
-    #
-    #     walkingdirections = WebDriverWait(driver, 10).until(
-    #         EC.presence_of_element_located(driver.find_element_by_xpath("//@label[@for='mapbox-directions-profile-walking']"))
-    #     )
-    #
-    #     # (5) select you wish to view walking directions by clicking on "walking"
-    #     walkingdirections.click()
-    #
-    #     assert "km" in driver.page_source and "min" in driver.page_source
+     def test_use_case_3(self):
+         driver = self.driver
+    
+         # (1) open the webpage
+         driver.get("http://127.0.0.1:5000/")
+    
+         random_number = randint(1, 10)
+         courses = driver.find_elements_by_class_name("course-box")
+         random_course = courses[random_number]
+    
+         # (2) click on a course
+         random_course.click()
+    
+         mapinstance = driver.find_element_by_class_name("map")
+         builder = ActionChains(driver)
+    
+         # (3, 4) find a location on the map and click it
+         builder.move_to_element_with_offset(mapinstance, 30, 30).click(mapinstance).perform()
+    
+    
+         walkingdirections = WebDriverWait(driver, 10).until(
+             EC.presence_of_element_located(driver.find_element_by_xpath("//@label[@for='mapbox-directions-profile-walking']"))
+         )
+    
+         # (5) select you wish to view walking directions by clicking on "walking"
+         walkingdirections.click()
+    
+         assert "km" in driver.page_source and "min" in driver.page_source
 
     def tearDown(self):
         self.driver.close()
