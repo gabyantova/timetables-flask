@@ -11,33 +11,24 @@
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.css' rel='stylesheet'/>
     <link href='https://cdnjs.cloudflare.com/ajax/libs/pretty-checkbox/2.2.0/pretty.min.css' rel='stylesheet'/>
 
-
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.sticky-kit.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.cookie.js') }}"></script>
 
-
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v3.0.3/mapbox-gl-directions.js'></script>
-
     <link rel='stylesheet'
           href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v3.0.3/mapbox-gl-directions.css'
           type='text/css'/>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
     <link rel="stylesheet" href="{{ url_for('static', filename='css/awesome-bootstrap-checkbox.css') }}">
+    {#    Checkbox stylesheet from http://flatlogic.github.io/awesome-bootstrap-checkbox/#}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-
 </head>
 <body>
 
 
 <div role="tabpanel">
-
     <div id="header">
-
         <div class="">
             <div id="logo-and-title" class="">
                 <img id="logo" src="https://upload.wikimedia.org/wikipedia/en/c/ca/University_of_Edinburgh_School_of_Informatics_logo.jpg">
@@ -108,8 +99,6 @@
                         </label>
                     </div>
                 </div>
-
-
             </div>
             <div class="buttons">
                 <button id="showPinnedCoursesButton" type="button" class="btn btn-primary disabled" data-placement="left" data-toggle="tooltip" title="Hover over a course to pin it">
@@ -121,12 +110,8 @@
                 <button id="restoreAndRemoveAllPins" type="button" class="btn btn-primary">
                     Restore all courses and remove pins
                 </button>
-
-
-
             </div>
         </div>
-
         <ul class="nav nav-tabs">
             <li id="semester1-li" class="active">
                 <a href="#semester1-table" semester="1" class="semester-tab" id="semester1-tab" data-toggle="tab">Semester
@@ -137,7 +122,6 @@
                     2</a>
             </li>
         </ul>
-
         <table id="header-table" class="table table-hover">
             <thead>
             <tr>
@@ -149,13 +133,7 @@
             </thead>
         </table>
     </div>
-
-    <script>
-
-    </script>
-
     <div class="container">
-
         <div class="tab-content" id="result">
             <div role="tabpanel" class="tab-pane fade in active" id="basics">
             </div>
@@ -167,7 +145,6 @@
                         {% for day in WEEKDAYS %}
                             <tr>
                                 <td><p class="dayOfTheWeek">{{ day }}</p></td>
-
                                 {% set timeCounter = 0 %}
                                 {% for timeSlot in CONTENT_DICT[semesterNumber-1][day[0:3]] %}
                                     {% set timeLoopIndex = loop.index-1 %}
@@ -176,17 +153,25 @@
                                             {% for courseDict in timeSlot %}
                                                 {% set courseAcr = courseDict['course_acr'] %}
                                                 {% set courseAcrInCourseDict =  COURSE_DICT[courseAcr] %}
-
+                                                {% set courseDetails = courseDict['course_details'] %}
                                                 {% set courseId =  courseAcr + '-' + day + TIMES_LIST[timeLoopIndex][0:4] + '-semester' + semesterNumber|string %}
                                                 {% set courseIdJS = courseAcr + day + TIMES_LIST[timeLoopIndex][0:4] + 'semester' + semesterNumber|string %}
 
-                                                {% set venueFromDetails = matchVenue(courseDict['course_details']) %}
+                                                {% set venueFromDetails = matchVenue(courseDetails) %}
                                                 {% set mostSimilarVenueFromDetails = mostSimilar(venueFromDetails) %}
                                                 {% set venueToUOEJsonCoord = matchNameInJsonToLongLat(mostSimilarVenueFromDetails) %}
                                                 {% set venueToUOEJsonDict =  matchNameInJsonToDict(mostSimilarVenueFromDetails) %}
+                                                {% set courseHasTwoLocations = courseDict["course_two_locations"] %}
+                                                {% set courseHasSpecificWeeks = courseDict["course_specific_weeks"] %}
 
+                                                {% if courseHasSpecificWeeks %}
+                                                    {% set locationsArray = findAllVenues(courseDetails) %}
+                                                    {% set weekIntervalsArray = getWeekIntervals(courseDetails) %}
+                                                {% endif %}
+
+
+                                                {# To only show pins on hover#}
                                                 <style>
-
                                                     .{{ courseId }}-title_bar_icon {
                                                         visibility: hidden;
                                                     }
@@ -214,13 +199,33 @@
                                                     </div>
                                                     {% if courseAcr in COURSE_DICT %}
                                                         <p class="course_name">{{ courseAcrInCourseDict['course'] }}</p>
+
+                                                        {% if courseDict["course_two_locations"] %}
+                                                            {%  set locations = findAllVenues(courseDict['course_details']) %}
+
+                                                                {% if locations[0] in VENUE_DICT%}
+                                                                    {{ VENUE_DICT[locations[0]]["venue_name"] }}
+                                                                {% elif locations[0] in ALTERNATE_VENUE_DICT%}
+                                                                    {{ ALTERNATE_VENUE_DICT[locations[0]]["venue_name"] }}
+                                                                {% endif %}
+
+                                                                <p class="ampersand">&</p>
+
+                                                               {% if locations[1] in VENUE_DICT%}
+                                                                    {{ VENUE_DICT[locations[1]]["venue_name"] }}
+                                                                {% elif locations[1] in ALTERNATE_VENUE_DICT%}
+                                                                    {{ ALTERNATE_VENUE_DICT[locations[1]]["venue_name"] }}
+                                                                {% endif %}
+
+                                                        {% else %}
                                                         <p class="course_location">{{ venueFromDetails }}</p>
+                                                        {% endif %}
                                                     {% endif %}
                                                 </div>
 
 
 
-                                                <!-- MODAL -->
+                                                <!-- MODAL STARTS HERE -->
 
                                                 <div class="modal fade"
                                                      id="{{ courseId }}-modal"
@@ -233,7 +238,8 @@
                                                                 container: "{{  courseId }}-map",
                                                                 style: 'mapbox://styles/mapbox/streets-v9',
                                                                 zoom: 16,
-                                                                center: {{ courseIdJS }}Coordinates
+                                                                center: {{ courseIdJS }}Coordinates,
+                                                                maxBounds: bounds
                                                             });
                                                             var {{courseIdJS }}Directions = new MapboxDirections({
                                                                 accessToken: mapboxgl.accessToken,
@@ -274,11 +280,8 @@
                                                             ;
                                                             {{ courseIdJS }}Map.addControl(new mapboxgl.GeolocateControl());
 
-
                                                         });
                                                     </script>
-
-
                                                     <div class="modal-dialog modal-lg" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -288,6 +291,7 @@
                                                                 </button>
                                                                 <h4 class="modal-title" id="myModalLabel">
                                                                     {% if courseAcr in COURSE_DICT %}
+
                                                                         <h2>{{ courseAcrInCourseDict['course'] }}</h2>
 
 
@@ -347,33 +351,77 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="col-sm-6">
+                                                                        <div class="col-sm-4">
                                                                             <p><span
                                                                                     class="glyphicon glyphicon-time"></span> {{ day }}, {{ TIMES_LIST[timeLoopIndex] }}
                                                                             </p>
-                                                                            <p>
+
+                                                                            {% if courseHasSpecificWeeks %}
+                                                                                {% for option in weekIntervalsArray %}
+                                                                                    <p>
+                                                                                    {% if courseHasTwoLocations %}
+                                                                                        {% if  locationsArray[loop.index-1] in VENUE_DICT%}
+                                                                                            <i class="fa fa-bank"></i>{{ VENUE_DICT[locationsArray[loop.index-1]]["venue_name"] }}
+                                                                                        {% elif  locationsArray[loop.index-1] in ALTERNATE_VENUE_DICT%}
+                                                                                            <i class="fa fa-bank"></i>{{ ALTERNATE_VENUE_DICT[locationsArray[loop.index-1]]["venue_name"] }}
+                                                                                        {% endif %}
+                                                                                    {% else %}
+                                                                                        <p>
+                                                                                        <img id="door"
+                                                                                             src="{{ url_for('static', filename='img/door.svg') }}">
+                                                                                        {{ matchRoom(courseDict["course_room"]) }}
+                                                                                        </p>
+                                                                                        <i class="fa fa-bank"></i> {{ venueFromDetails }}
+                                                                                    {% endif %}
+
+                                                                                    </p>
+                                                                                    <p>
+{#                                                                                {% else %}#}
+                                                                                        <i class="fa fa-calendar"></i>
+                                                                                        {% for x in range(1, 12) %}
+                                                                                        <span class="fa-stack weekSpecifier">
+                                                                                          <i class="fa fa-stop fa-lg fa-stack-1x"></i>
+                                                                                          {% if x in option %}
+                                                                                             <strong class="fa-stack-1x weekSpecifierNumber">{{ x }}</strong>
+                                                                                          {% endif %}
+                                                                                        </span>
+                                                                                        {% endfor %}
+                                                                                    </p>
+                                                                                {% endfor %}
+                                                                            {% else %}
+                                                                                <p>
                                                                                 <img id="door"
                                                                                      src="{{ url_for('static', filename='img/door.svg') }}">
                                                                                 {{ matchRoom(courseDict["course_room"]) }}
-                                                                            </p>
-                                                                            <p>
+                                                                                </p>
+                                                                                <p>
                                                                                 <i class="fa fa-bank"></i> {{ venueFromDetails }}
-                                                                            </p>
+                                                                                </p>
+                                                                            {% endif %}
+
                                                                             <p><span
                                                                                     class="glyphicon glyphicon-map-marker"></span> {{ venueToUOEJsonDict['address1'] }},
                                                                                 {{ venueToUOEJsonDict['postcode'] }}
                                                                             </p>
+
                                                                         </div>
+                                                                        <div class="col-sm-4">
+                                                                            {% for lecturer, url in courseAcrInCourseDict['lecturers'].iteritems() %}
+                                                                            <p><span
+                                                                                    class="glyphicon glyphicon-user"></span> <a href="{{ url }}">{{ lecturer }}</a>
+                                                                            </p>
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                        <div class="col-sm-4">
+{#                                                                        <p>{{ locationsArray }}</p>#}
+
+                                                                        </div>
+
                                                                     </div>
                                                                     <div id="{{ courseId }}-map"
                                                                          class='map'></div>
                                                                 {% endif %}
-                                                                <!--<a target="_blank" href="
-                                                                    {% if courseAcr in COURSE_DICT %}-->
-                                                                    <!--{{courseAcrInCourseDict['course_url']}}-->
-                                                                    <!--{% endif %}-->
-                                                                <!--"><span class="glyphicon glyphicon-home"></span>-->
-                                                                <!--</a>-->
+
 
                                                             </div>
                                                             <div class="modal-footer">
@@ -386,6 +434,7 @@
                                                     </div>
                                                 </div>
 
+                                                <!-- MODAL ENDS HERE -->
 
                                             {% endfor %}
                                         </td>
@@ -398,17 +447,12 @@
                     </table>
                 </div>
             {% endfor %}
-
         </div>
-
     </div>
-
-
+</div>
 </div>
 
-
-</div>
-
+{#Scripts that require other elements to have loaded before they execute#}
 <script src="{{ url_for('static', filename='js/pinning.js') }}"></script>
 <script src="{{ url_for('static', filename='js/button-functionality.js') }}"></script>
 <script src="{{ url_for('static', filename='js/mobile-friendly-table.js') }}"></script>

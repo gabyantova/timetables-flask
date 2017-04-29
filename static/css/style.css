@@ -3,8 +3,18 @@ body {
     padding: 0;
 }
 
-a:link{
+a{
     color: #385d9e;
+}
+a:hover{
+    text-decoration: none;
+}
+
+.weekSpecifierNumber{
+    color: white;
+}
+.fa-stack{
+    width: 0.95em;
 }
 
 #header {
@@ -48,7 +58,10 @@ a:link{
 }
 
 
-
+.ampersand{
+    font-weight: bold;
+    font-size: medium;
+}
 
 
 #header-table {

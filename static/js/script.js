@@ -2,6 +2,11 @@
 var pinnedCourses = [];
 mapboxgl.accessToken = 'pk.eyJ1IjoiZ2FieWFudG92YSIsImEiOiJjaXlhNXRsOW8wMDIyMzNxcDdxdTk3dGcwIn0.gNNtUvGPe9zNblVthu__Yg';
 
+var bounds = [
+    [-3.312635, 55.896151], // Southwest coordinates
+    [ -3.127241, 55.983255]  // Northeast coordinates
+];
+
 
 $(document).ready(function () {
 
