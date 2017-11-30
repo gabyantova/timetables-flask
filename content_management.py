@@ -38,7 +38,7 @@ def Get_times_list():
 def Get_course_dict():
     COURSE_DICT = {}
     url_course = "http://course.inf.ed.ac.uk/"
-    soup_course = BeautifulSoup(urllib.urlopen(url_course).read(), "lxml")
+    soup_course = BeautifulSoup(urllib2.urlopen(url_course).read(), "lxml")
     course_table = soup_course.table.tbody.find_all("tr")
 
     for row in course_table:
@@ -73,7 +73,7 @@ def Get_course_dict():
 def Get_venue_dict():
     VENUE_DICT = {}
     url_venue = "http://web.inf.ed.ac.uk/infweb/student-services/ito/admin/venue-codes"
-    soup_venue = BeautifulSoup(urllib.urlopen(url_venue).read(), "lxml")
+    soup_venue = BeautifulSoup(urllib2.urlopen(url_venue).read(), "lxml")
     building_and_room_codes = soup_venue.find("section", {"id": "block-system-main"}).find_all("ul")
     building_codes = building_and_room_codes[0].find_all("li")
 
@@ -137,7 +137,7 @@ def Get_UOE_venue_data():
 # Main content creator
 def Get_content_dict():
     semesters_list = []
-    soup = BeautifulSoup(urllib.urlopen(Get_url()).read(), "lxml")
+    soup = BeautifulSoup(urllib2.urlopen(Get_url()).read(), "lxml")
     tables = soup.find_all("table")
     for table in tables:
         semester_dict = {}
