@@ -1,4 +1,4 @@
-AST==0.0.2
+
 beautifulsoup4==4.6.0
 click==6.7
 DateTime==4.2

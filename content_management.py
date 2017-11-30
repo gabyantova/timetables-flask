@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
-import urllib
-import urllib2
+import urllib.request as urllib2
+# import urllib2
 import datetime
 import re
 import ast
