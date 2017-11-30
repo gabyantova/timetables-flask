@@ -6,7 +6,7 @@
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.5.2 virtualenv at ~/.virtualenvs/BeautifulSoupGaby" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 2.7.12 virtualenv at ~/Documents/uniwork/honsproj/BeautifulTimetables/beautifulVenv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="mapbox-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="mapbox-gl-DefinitelyTyped" level="application" />
