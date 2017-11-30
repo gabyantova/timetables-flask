@@ -1,11 +1,12 @@
 from flask import Flask, render_template
 from content_management import *
 from fuzzywuzzy import fuzz, process
-
+import os
 import sys
+
 print (sys.version)
 
-#Import variables from content_management.py
+# Import variables from content_management.py
 WEEKDAYS = Weekdays()
 URL = Get_url()
 TIMES_LIST = Get_times_list()
@@ -18,9 +19,9 @@ ROOM_DICTIONARY = Get_room_dictionary()
 
 app = Flask(__name__)
 
+
 @app.context_processor
 def utility_processor():
-
     # Returns the name of a venue acronym by looking both into VENUE_DICT and ALTERNATE_VENUE_DICT
     def matchVenue(course_details, venue_dict=VENUE_DICT, alternate_venue_dict=ALTERNATE_VENUE_DICT):
         for key in venue_dict.keys():
@@ -60,7 +61,7 @@ def utility_processor():
         weekIntervals = re.findall("[0-9]+\s?[\s&-]\s?[0-9]*", details)
 
         for weekInterval in weekIntervals:
-            if len(weekIntervals)!=1:
+            if len(weekIntervals) != 1:
                 smallIntervalContainer = []
             if re.match("[0-9]+-[0-9]+", weekInterval):
                 digitsInWeekInterval = re.findall("[0-9]+", weekInterval)
@@ -78,7 +79,6 @@ def utility_processor():
                 smallIntervalContainer.append(int(digit))
                 bigIntervalContainer.append(smallIntervalContainer)
         return bigIntervalContainer
-
 
     # Will return long and lat given a venue name
     def matchNameInJsonToLongLat(name, dict=UOE_VENUE_DATA):
@@ -118,21 +118,20 @@ def utility_processor():
                 getWeekIntervals=getWeekIntervals)
 
 
-
-
 @app.route('/')
 # This statement will pass variables onto intex.html
 def homepage():
     return render_template("index.html",
-    WEEKDAYS = WEEKDAYS,
-    TIMES_LIST = TIMES_LIST,
-    COURSE_DICT = COURSE_DICT,
-    CONTENT_DICT = CONTENT_DICT,
-    VENUE_DICT = VENUE_DICT,
-    ALTERNATE_VENUE_DICT = ALTERNATE_VENUE_DICT,
-    UOE_VENUE_DATA = UOE_VENUE_DATA,
-    ROOM_DICTIONARY = ROOM_DICTIONARY)
+                           WEEKDAYS=WEEKDAYS,
+                           TIMES_LIST=TIMES_LIST,
+                           COURSE_DICT=COURSE_DICT,
+                           CONTENT_DICT=CONTENT_DICT,
+                           VENUE_DICT=VENUE_DICT,
+                           ALTERNATE_VENUE_DICT=ALTERNATE_VENUE_DICT,
+                           UOE_VENUE_DATA=UOE_VENUE_DATA,
+                           ROOM_DICTIONARY=ROOM_DICTIONARY)
 
 
 if __name__ == "__main__":
-    app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
