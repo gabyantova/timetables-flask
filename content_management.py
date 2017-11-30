@@ -23,7 +23,7 @@ def Get_url():
 # Get all course times and add a dash between them
 def Get_times_list():
     url = Get_url()
-    soup = BeautifulSoup(urllib.urlopen(url).read(), "lxml")
+    soup = BeautifulSoup(urllib2.urlopen(url).read(), "lxml")
     times = soup.table.thead.tr.find_all("th")
     times = times[1:]
     TIMES_LIST = []
