@@ -16,12 +16,14 @@ a:hover{
 .fa-stack{
     width: 0.95em;
 }
-
+#table-container{
+    margin-top: 160px;
+}
 #header {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: auto;
     float: left;
     z-index: 2;
     background-color: white;
